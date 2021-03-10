@@ -16,13 +16,13 @@ begin
     3'b101: s = a | b;
     3'b110: s = -a;
     3'b111: s = -b;
-	default: s = 'bx; //desconocido en cualquier otro caso (x ó z), por si se modifica el código
+	default: s = 'bx; //desconocido en cualquier otro caso (x ï¿½ z), por si se modifica el cï¿½digo
   endcase
 end
 
 assign y = s;
 
 //Calculo del flag de cero
-assign zero = ~(|y);   //operador de reducción |y hace la or de los bits del vector 'y' y devuelve 1 bit resultado
+assign zero = ~(|y);   //operador de reducciï¿½n |y hace la or de los bits del vector 'y' y devuelve 1 bit resultado
 		   
 endmodule

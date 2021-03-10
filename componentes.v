@@ -2,7 +2,7 @@
 
 //Banco de registros de dos salidas y una entrada
 module regfile(input  wire        clk, 
-               input  wire        we3,           //señal de habilitación de escritura
+               input  wire        we3,           //seï¿½al de habilitaciï¿½n de escritura
                input  wire [3:0]  ra1, ra2, wa3, //direcciones de regs leidos y reg a escribir
                input  wire [7:0]  wd3, 			 //dato a escribir
                output wire [7:0]  rd1, rd2);     //datos leidos
@@ -57,7 +57,7 @@ module mux2 #(parameter WIDTH = 8)
 endmodule
 
 //Biestable para el flag de cero
-//Biestable tipo D síncrono con reset asíncrono por flanco y entrada de habilitación de carga
+//Biestable tipo D sï¿½ncrono con reset asï¿½ncrono por flanco y entrada de habilitaciï¿½n de carga
 module ffd(input wire clk, reset, d, carga, output reg q);
 
   always @(posedge clk, posedge reset)
