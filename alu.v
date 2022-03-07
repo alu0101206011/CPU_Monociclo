@@ -1,6 +1,6 @@
-module alu(input wire [7:0] a, b,
+module alu(input wire [15:0] a, b,
            input wire [2:0] op_alu,
-           output wire [7:0] y,
+           output wire [15:0] y,
            output wire zero);
 
 reg [7:0] s;		   
@@ -26,3 +26,5 @@ assign y = s;
 assign zero = ~(|y);   //operador de reducci�n |y hace la or de los bits del vector 'y' y devuelve 1 bit resultado
 		   
 endmodule
+
+// Estaría bien poner más señales que solo cuando hay un 0. Estaría interesante poner cuando hay overflow, cuando hay acarreo.
