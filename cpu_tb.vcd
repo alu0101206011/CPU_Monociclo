@@ -1,5 +1,5 @@
 $date
-	Mon Mar  7 13:12:19 2022
+	Mon Mar  7 13:43:54 2022
 $end
 $version
 	Icarus Verilog
@@ -48,12 +48,12 @@ $var wire 6 9 opcode [5:0] $end
 $var wire 3 : op_alu [2:0] $end
 $var wire 32 ; instruccion [31:0] $end
 $scope module ALU $end
-$var wire 1 0 zero $end
 $var wire 16 < y [15:0] $end
+$var wire 1 0 zero $end
 $var wire 3 = op_alu [2:0] $end
 $var wire 16 > b [15:0] $end
 $var wire 16 ? a [15:0] $end
-$var reg 8 @ s [7:0] $end
+$var reg 16 @ s [15:0] $end
 $upscope $end
 $scope module PC $end
 $var wire 1 ! clk $end
@@ -239,8 +239,8 @@ b111 F
 b111 M
 b111 6
 b111 <
-b111 K
 b111 @
+b111 K
 b111 3
 b111 ?
 b111 S
@@ -264,31 +264,30 @@ b11 b
 #9000
 0!
 #12000
-b1010 1
-b1010 F
-b1010 M
-b1010 6
-b1010 <
-b1010 K
-b1010 @
-0)
+b100000111 1
+b100000111 F
+b100000111 M
+b100000111 6
+b100000111 <
+b100000111 @
+b100000111 K
 b10 -
 b10 :
 b10 =
 b10 X
-b11 3
-b11 ?
-b11 S
+b100000000 3
+b100000000 ?
+b100000000 S
 b111 7
 b111 >
 b111 G
 b11 8
 b11 H
 b11 Q
-b101000 ,
-b101000 9
-b101000 W
-b0 R
+b1000 ,
+b1000 9
+b1000 W
+b100000000 R
 b11 E
 b10 D
 b1 C
@@ -296,8 +295,8 @@ b100100011 N
 b11 4
 b11 A
 b11 O
-b10100000000000000000000100100011 ;
-b10100000000000000000000100100011 J
+b100000000100000000000100100011 ;
+b100000000100000000000100100011 J
 b11 2
 b11 P
 b11 V
@@ -316,16 +315,15 @@ b0 F
 b0 M
 b0 6
 b0 <
-b0 K
 b0 @
-b0 3
-b0 ?
-b0 S
-1)
+b0 K
 b0 -
 b0 :
 b0 =
 b0 X
+b0 3
+b0 ?
+b0 S
 b0 7
 b0 >
 b0 G
@@ -335,6 +333,7 @@ b0 Q
 b0 ,
 b0 9
 b0 W
+b0 R
 b0 E
 b0 D
 b0 C
@@ -351,7 +350,7 @@ b11 5
 b11 B
 b11 I
 b11 U
-b1010 d
+b100000111 d
 1!
 #21000
 0!

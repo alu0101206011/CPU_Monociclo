@@ -29,4 +29,3 @@ Una vez abierto es necesario darle a reload para que se "ponga en marcha".
 Luego vamos arrastrando las señales que queramos visualizar.
 
 ## Resultados
-Deberían ser todos CORRECTO para dar por bueno el algoritmo.

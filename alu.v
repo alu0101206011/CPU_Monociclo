@@ -3,7 +3,7 @@ module alu(input wire [15:0] a, b,
            output wire [15:0] y,
            output wire zero);
 
-reg [7:0] s;		   
+reg [15:0] s;		   
 		   
 always @(a, b, op_alu)
 begin
