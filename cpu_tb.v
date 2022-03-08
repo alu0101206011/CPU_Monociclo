@@ -31,7 +31,7 @@ end
 initial
 begin
 
-  #(12*60);  //Esperamos 12 ciclos o 12 instrucciones
+  #(22*60);  //Esperamos 12 ciclos o 12 instrucciones
   $write("%d + %d = %d\n", cpu_tb.cpumono.camino_datos.banco_registros.regb[1], cpu_tb.cpumono.camino_datos.banco_registros.regb[2], cpu_tb.cpumono.camino_datos.banco_registros.regb[3]);
   $finish;
 end
