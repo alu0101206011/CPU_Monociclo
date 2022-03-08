@@ -27,7 +27,7 @@ module regfile(input  wire        clk,
 endmodule
 
 //modulo sumador  
-module sum(input  wire [9:0] a, b, output wire [9:0] y);
+module sum(input wire signed [9:0] a, b, output wire [9:0] y);
 
   assign y = a + b;
 

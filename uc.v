@@ -119,7 +119,7 @@ module uc(input wire [7:0] opcode, input wire z, output reg s_inc, s_rel_pc, s_i
         op_alu = 3'b000;
         s_inm = 1'b0;
         s_rel_pc = 1'b1;
-        s_inc = 1'b0;
+        s_inc = 1'b1;
         we3 = 1'b0;
         wez = 1'b0;
       end
