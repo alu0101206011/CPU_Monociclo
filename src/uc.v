@@ -24,8 +24,8 @@ module uc(input wire [7:0] opcode, input wire z, output reg s_inc, s_rel_pc, s_i
       end
       8'b0000xxxx:  // Alu (a)
       begin
-        op_alu = 3'b000; 
-        s_inc = 1'b1;  // para que aumente pc cuando no son saltos  
+        op_alu = 3'b000;
+        s_inc = 1'b1;
         we3 = 1'b1;
         wez = 1'b1;
         s_inm = 1'b1;
@@ -33,7 +33,7 @@ module uc(input wire [7:0] opcode, input wire z, output reg s_inc, s_rel_pc, s_i
       end
       8'b0010xxxx:  // Alu (a + b)
         begin
-          op_alu = 3'b010; 
+          op_alu = 3'b010;
           s_inc = 1'b1;
           we3 = 1'b1;
           wez = 1'b1;
@@ -87,7 +87,7 @@ module uc(input wire [7:0] opcode, input wire z, output reg s_inc, s_rel_pc, s_i
       end
       8'b00010000: // Direccionamiento inmediato   opcode e inmediato (16 bits)
       begin
-        
+        // me imagino que será poner s_datos a 1
       end
       8'b00010001: // Direccionamiento directo     opcode y direccion de memoria (por el cable datos está el operando)  (16 bits)
       begin
@@ -105,7 +105,7 @@ module uc(input wire [7:0] opcode, input wire z, output reg s_inc, s_rel_pc, s_i
       begin
         
       end
-      8'b00010101: // salto absoluto o relativo a base
+      8'b00010101: // salto absoluto 
       begin
         op_alu = 3'b000;
         s_inm = 1'b0;

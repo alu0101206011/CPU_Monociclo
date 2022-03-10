@@ -18,7 +18,7 @@ module cd(input wire clk, reset, s_inc, s_rel_pc, s_inm, s_datos, we3, wez, inpu
   regfile banco_registros(clk, we3, instruccion[11:8], instruccion[7:4], instruccion[3:0], wd, rd1, rd2);
   mux2 #(16) muxDATOS(sal_ALU, datos, s_datos, wd);
   mux2 #(16) muxINM(rd1, instruccion[27:12], s_inm, sal_muxINM);
-  alu ALU(sal_muxINM, rd2, op_alu, sal_ALU, carry, ALUoflow, zalu);
+  alu ALU(sal_muxINM, rd2, s_inm, op_alu, sal_ALU, carry, ALUoflow, zalu);
 
 
   ffd ffz(clk, reset, zalu, wez, z);

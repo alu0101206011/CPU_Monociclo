@@ -67,4 +67,3 @@ module ffd(input wire clk, reset, d, carga, output reg q);
 	      q <= d;
 
 endmodule 
-

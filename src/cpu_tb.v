@@ -20,19 +20,24 @@ cpu cpumono(clk, reset);
 
 initial
 begin
-  $dumpfile("cpu_tb.vcd");
+  $dumpfile("./bin/cpu_tb.vcd");
   $dumpvars;
-  for (idx = 1; idx < 4; idx = idx + 1) $dumpvars(0,cpu_tb.cpumono.camino_datos.banco_registros.regb[idx]);  
+  for (idx = 1; idx < 6; idx = idx + 1) $dumpvars(0,cpu_tb.cpumono.camino_datos.banco_registros.regb[idx]);  
   reset = 1;  //a partir del flanco de subida del reset empieza el funcionamiento normal
   #10;
   reset = 0;  //bajamos el reset 
 end
 
+reg signed [15:0] registros;
+
 initial
 begin
-
-  #(22*60);  //Esperamos 12 ciclos o 12 instrucciones
-  $write("%d + %d = %d\n", cpu_tb.cpumono.camino_datos.banco_registros.regb[1], cpu_tb.cpumono.camino_datos.banco_registros.regb[2], cpu_tb.cpumono.camino_datos.banco_registros.regb[3]);
+  #(60*60);  //Esperamos 12 ciclos o 12 instrucciones
+  for (idx = 1; idx < 6; idx = idx + 1)
+  begin
+    registros[15:0] = cpu_tb.cpumono.camino_datos.banco_registros.regb[idx];
+    $write("R%d = %d\n",idx, registros);
+  end
   $finish;
 end
 
