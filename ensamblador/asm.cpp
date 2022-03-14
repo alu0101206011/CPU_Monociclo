@@ -17,11 +17,11 @@
 
 //Nemónico de cada instrucción
 
-const char* mnemonics[] = { "li", "noti", "addi", "subi", "andi", "ori", "c2i", "c2i", "mov", "not", "add", "sub", "and", "or", "c2", "c2", "load", "store"/*faltan cosas*/, "j", "jrel", "jz", "jnz", "nop"};
+const char* mnemonics[] = { "li", "addi", "subi", "andi", "ori", "noti", "c2i", "mov", "not", "add", "sub", "and", "or", "c2", "c2", "load", "store"/*faltan cosas*/, "j", "jrel", "jz", "jnz", "jcall", "jret", "nop"};
 
 //Opcode de cada instrucción
 
-const char* opcodes[] = { "0000", "0001", "0010", "0011", "0100", "0101", "0110", "0111", "1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111", "00010000", "00010001"/*faltan cosas*/, "00010101", "00010110", "00010111", "00011000", "00011111"};
+const char* opcodes[] = { "0000", "0010", "0011", "0100", "0101", "0110", "0111", "1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111", "00010000", "00010001"/*faltan cosas*/, "00010101", "00010110", "00010111", "00011000", "00011001", "00011010", "00011111"};
 
 // Operandos
 
@@ -29,7 +29,7 @@ const char* opcodes[] = { "0000", "0001", "0010", "0011", "0100", "0101", "0110"
 
 // Codificación de los operandos de cada instrucción (C: cte datos, D: cte de dirección de código, R: campo de registro)
 
-const char* operands[] = { "RC", "RC", "RRC", "RRC", "RRC", "RRC", "RC", "RC", "RR", "RR", "RRR", "RRR", "RRR", "RRR", "RR", "RR", "RRC"/*C podría ser offset*/, "RRC"/*faltan cosas*/, "D", "S", "D", "D", ""};
+const char* operands[] = { "RC", "RRC", "RRC", "RRC", "RRC", "RC", "RC", "RR", "RR", "RRR", "RRR", "RRR", "RRR", "RR", "RR", "RRC"/*C podría ser offset*/, "RRC"/*faltan cosas*/, "D", "S", "D", "D", "S", "", ""};
 
 //Tamaños de operandos
 #define CONSTANTSIZE 16    //Tamaño en bits de una constante C (o dirección de datos si así se considera)
@@ -41,7 +41,6 @@ const char* operands[] = { "RC", "RC", "RRC", "RRC", "RRC", "RRC", "RC", "RC", "
 
 //Posiciones (bit más significativo) de los operandos en la instrucción (de INSTSIZE-1 a 1), 0 significa no usado (no hay operandos de sólo 1 bit)
 const int posoper[NUMINS][MAXNUMOPER] = { {3, 27, 0},
-                                          {3, 27, 0},
                                           {3, 7, 27},
                                           {3, 7, 27},
                                           {3, 7, 27},
@@ -62,6 +61,8 @@ const int posoper[NUMINS][MAXNUMOPER] = { {3, 27, 0},
                                           {9, 0, 0},
                                           {9, 0, 0},
                                           {9, 0, 0},
+                                          {9, 0, 0},
+                                          {0, 0, 0},
                                           {0, 0, 0} };
 
 //*************************************************************************************************************************************************************************
