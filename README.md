@@ -1,4 +1,4 @@
-# Algoritmo de multiplicación de Booth de N bits con recodificación a N bits.
+# Implementacion de una CPU monociclo
 Se ha implementado 
 
 ## Implementación
