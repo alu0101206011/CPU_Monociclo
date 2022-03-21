@@ -21,7 +21,7 @@ const char* mnemonics[] = { "li", "addi", "subi", "andi", "ori", "noti", "c2i", 
 
 //Opcode de cada instrucción
 
-const char* opcodes[] = { "0000", "0010", "0011", "0100", "0101", "0110", "0111", "1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111", "00010000", "00010001"/*faltan cosas*/, "00010101", "00010110", "00010111", "00011000", "00011001", "00011010", "00011111"};
+const char* opcodes[] = { "0000", "0010", "0011", "0100", "0101", "0110", "0111", "1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111", "00010000", "00010001"/*faltan cosas*/, "00010100", "00010101", "00010110", "00010111", "00011000", "00011001", "00011111"};
 
 // Operandos
 
@@ -195,8 +195,10 @@ int getSymbolIdx(int lineadef) {
 
 int getSymbolValue(const char* sym) {
     int value = -1;
+    unsigned sym_size = 0;
     for (int i = 0; i < numSymb; i++) {
-        if (!strncmp(tablaS[i].Symbol, sym, strlen(sym))) {
+        sym_size = strlen(sym) > strlen(tablaS[i].Symbol) ? strlen(sym) : strlen(tablaS[i].Symbol);  // para que pueda existir una etiqueta ref que sea sufijo de otra 
+        if (!strncmp(tablaS[i].Symbol, sym, sym_size)) {
             value = tablaS[i].Value;
             break;
         }

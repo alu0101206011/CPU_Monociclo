@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}/../ensamblador/asm",
-            "args": ["../ensamblador/codigo.asm", "../progfile.mem"],
+            "args": ["../ensamblador/codigo1.asm", "../progfile.mem"],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],

@@ -1,5 +1,6 @@
-//Memoria de programa, se inicializa y no se modifica
+`timescale 1 ns / 10 ps
 
+//Memoria de programa, se inicializa y no se modifica
 module memprog(input  wire        clk,
                input  wire [9:0]  a,
                output wire [31:0] rd);

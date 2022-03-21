@@ -1,3 +1,5 @@
+`timescale 1 ns / 10 ps
+
 module alu #(parameter WIDTH = 15) (input wire [WIDTH:0] a, b,
            input wire s_inm,
            input wire [2:0] op_alu,

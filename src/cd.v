@@ -1,7 +1,9 @@
-module cd(input wire clk, reset, s_inc, s_rel_pc, s_inm, s_pila, s_datos, we3, wez, push, pop, interrupt, input wire [2:0] op_alu, input wire [15:0] datos, output wire z, ALUoflow, uflow, oflow, output wire [7:0] opcode, output wire [15:0] direcciones);
+`timescale 1 ns / 10 ps
+
+module cd(input wire clk, reset, s_inc, s_rel_pc, s_inm, s_pila, s_datos, we3, wez, push, pop, input wire [2:0] op_alu, input wire [15:0] datos, input wire [7:0] interrupcion_vec, output wire z, ALUoflow, uflow, oflow, output wire [7:0] opcode, output wire [15:0] direcciones);
   
   wire[31:0] instruccion;
-  wire[9:0] sal_PC, sal_muxINC, sal_sumpc, sal_muxREL;
+  wire[9:0] sal_PC, sal_muxINC, sal_sumpc, sal_muxREL, sal_muxPila;
 
   // Incremento
   registro #(10) PC(clk, reset, sal_muxPila, sal_PC);
@@ -10,8 +12,9 @@ module cd(input wire clk, reset, s_inc, s_rel_pc, s_inm, s_pila, s_datos, we3, w
   mux2 #(10) muxINC(instruccion[9:0], sal_sumpc, s_inc, sal_muxINC); //Cuidado con el orden de a y b entradas
 
   // Pila
-  wire[9:0] sal_stack, sal_muxPila;
-  pila stack(clk, reset, push, pop, interrupt, sal_PC, sal_stack, uflow, oflow);
+  wire[9:0] sal_stack;
+  wire s_interr;
+  pila stack(clk, reset, push, pop, s_interr, sal_PC, sal_stack, uflow, oflow);
   mux2 #(10) muxStack(sal_muxINC, sal_stack, s_pila, sal_muxPila);
 
   // Memoria
@@ -25,9 +28,14 @@ module cd(input wire clk, reset, s_inc, s_rel_pc, s_inm, s_pila, s_datos, we3, w
   mux2 #(16) muxINM(rd1, instruccion[27:12], s_inm, sal_muxINM);
   alu ALU(sal_muxINM, rd2, s_inm, op_alu, sal_ALU, carry, ALUoflow, zalu);
 
+  // Interrupciones
+  wire[7:0] sal_interrupcion;
+  registro #(8) interrupcion_copia(clk, reset, interrupcion_vec, sal_interrupcion);
 
+  
   ffd ffz(clk, reset, zalu, wez, z);
 
+  assign s_interr = interrupcion_vec < 8'b0 ? 1'b1 : 1'b0;
   assign opcode = instruccion[31:24];
 
 endmodule

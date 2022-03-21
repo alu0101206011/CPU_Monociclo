@@ -1,13 +1,14 @@
 #!/bin/bash
 
 # Variables
-DEEBUG_ON=0
+DEBUG_ON=0
 ASSEMBLY=./ensamblador/asm.cpp
 EXECUTABLE=./ensamblador/ensamblador.out
 MEMORY=./progfile.mem
 ASSEMBLY_CODE=./ensamblador/codigo.asm
 GTKWAVE=0
-VERILOG_CODE=$(ls -d ./src/*)
+VERILOG_ALL=
+VERILOG_CODE=$(ls ./src/*)
 VERILOG_EXECUTABLE=./bin/cpu
 GTKWAVE_EXECUTABLE=./bin/cpu_tb.vcd
 
@@ -55,6 +56,9 @@ while [ "$1" != "" ]; do
         exit_error "Faltan argumentos."
       fi
       ;;
+    -w | --Wall )
+      VERILOG_ALL="-Wall"
+      ;;
     * )
       exit_error "La opcion $1 no existe, por favor indique una opcion valida."
       ;;
@@ -73,8 +77,8 @@ $EXECUTABLE $ASSEMBLY_CODE $MEMORY
 
 echo
 echo "Probando test bench"
-echo iverilog -o $VERILOG_EXECUTABLE $VERILOG_CODE
-iverilog -o $VERILOG_EXECUTABLE $VERILOG_CODE
+echo iverilog -o $VERILOG_EXECUTABLE $VERILOG_ALL $VERILOG_CODE
+iverilog -o $VERILOG_EXECUTABLE $VERILOG_ALL $VERILOG_CODE
 echo vvp $VERILOG_EXECUTABLE 
 echo
 vvp $VERILOG_EXECUTABLE | grep -v "VCD warning: array word cpu_tb.cpumono.camino_datos.banco_registros"
