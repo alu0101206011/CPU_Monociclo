@@ -1,31 +1,33 @@
 # Implementacion de una CPU monociclo
-Se ha implementado 
 
-## Implementación
+## Objetivo
+El objetivo de esta práctica es desarrollar una CPU básica monociclo. Esta CPU en concreto es la CPU "avanzada" la cual posee las siguientes características:
+
+- Tiene un tamaño de palabra de 32 bits.
+- Posee una memoria de programa con un máximo de 1024 instrucciones.
+- Una pila para subrutinas con control de overflow y underflow. // hacer control de overflow y underflow
+- Operaciones aritmetico-lógicas con registros.
+- Operaciones aritmetico-lógicas inmediatas
+- Salto absoluto, salto si cero, salto si no cero y relativo.
+- Modo de direcionamiento inmediato, directo y relativo. // hacer load y store
+- Gestión jerarquica de interrupciones // hacer gestión
 
 
-
-## Funcionamiento básico de Verilog
-
-- Para compilar:
-```terminal
-  $ iverilog -o cpu alu.v cd.v componentes.v cpu_tb.v cpu.v memprog.v pila.v uc.v
+## Manejo básico
+Estando desde el espacio de trabajo ejecutamos
+```
+./ejecutar.sh
 ```
 
-- Para simulación rápida
-```terminal
-  $ vvp cpu
+Gracias a esto compilaremos el código ensamblador en c++, lo ejecutaremos con
+un archivo pasado como parametro al main por defecto, se compilará verilog y 
+se ejecutará una simulación.
+
+Si quiere saber todas las opciones ejecute en terminal:
 ```
+./ejecutar.sh -h  
 
-- Para simular con el GTKWave:
-```terminal
-  $ gtkwave cpu_tb.vcd
+    ó
+
+./ejecutar.sh --help
 ```
-
-
-## Funcionamiento básico de GTKWave
-Una vez abierto es necesario darle a reload para que se "ponga en marcha".
-
-Luego vamos arrastrando las señales que queramos visualizar.
-
-## Resultados

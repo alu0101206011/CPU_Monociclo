@@ -15,19 +15,20 @@ GTKWAVE_EXECUTABLE=./bin/cpu_tb.vcd
 # Funciones
 
 exit_error() {
-  echo "$1" 1>&2
+  echo "---------  $1  ---------" 1>&2
+  echo
   usage
   exit 1
 }
 
 
 usage() {
-  echo "usage: ejecutar.sh [-d] [-g] [-h] [-ac codigo]"
+  echo "usage: ejecutar.sh [-d] [-g] [-h] [-ac codigo] [-w]"
   echo -e "\n\tComando -d o --debug Ejecuta en el ejectuable asm para debugear el código ensamblador en vscode. 
 \tComando -g o --gtkwave ejecuta el GTKWave. 
 \tComando -h o --help muesta esta ayuda. 
-\tCommando -ac o --assembly_code [file] Ejecuta el código que haya en ensamblador"
-
+\tComando -ac o --assembly_code [file] Ejecutamos el programa con el fichero indicado escrito en ensamblador.
+\tComando -w o --Wall Compila verilog enseñando todos los warnings."
 }
 
 #Realizamos case
@@ -53,14 +54,14 @@ while [ "$1" != "" ]; do
       if [[ "$1" != "" && "$1" != -* ]]; then
         ASSEMBLY_CODE=./ensamblador/$1
       else
-        exit_error "Faltan argumentos."
+        exit_error "Faltan argumentos"
       fi
       ;;
     -w | --Wall )
       VERILOG_ALL="-Wall"
       ;;
     * )
-      exit_error "La opcion $1 no existe, por favor indique una opcion valida."
+      exit_error "La opción $1 no existe, por favor indique una opción válida"
       ;;
   esac
   shift
