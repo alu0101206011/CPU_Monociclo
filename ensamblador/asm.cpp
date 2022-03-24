@@ -17,11 +17,11 @@
 
 //Nemónico de cada instrucción
 
-const char* mnemonics[] = { "li", "addi", "subi", "andi", "ori", "noti", "c2i", "mov", "not", "add", "sub", "and", "or", "c2", "c2", "load", "store"/*faltan cosas*/, "j", "jrel", "jz", "jnz", "jcall", "jret", "nop"};
+const char* mnemonics[] = { "li", "addi", "subi", "andi", "ori", "noti", "c2i", "mov", "not", "add", "sub", "and", "or", "c2", "c2", "load", "store"/*faltan cosas*/, "j", "jrel", "jz", "jnz", "jcall", "jret", "reti","nop"};
 
 //Opcode de cada instrucción
 
-const char* opcodes[] = { "0000", "0010", "0011", "0100", "0101", "0110", "0111", "1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111", "00010000", "00010001"/*faltan cosas*/, "00010100", "00010101", "00010110", "00010111", "00011000", "00011001", "00011111"};
+const char* opcodes[] = { "0000", "0010", "0011", "0100", "0101", "0110", "0111", "1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111", "00010000", "00010001"/*faltan cosas*/, "00010100", "00010101", "00010110", "00010111", "00011000", "00011001", "00011010", "00011111"};
 
 // Operandos
 
@@ -29,7 +29,7 @@ const char* opcodes[] = { "0000", "0010", "0011", "0100", "0101", "0110", "0111"
 
 // Codificación de los operandos de cada instrucción (C: cte datos, D: cte de dirección de código, R: campo de registro)
 
-const char* operands[] = { "RC", "RRC", "RRC", "RRC", "RRC", "RC", "RC", "RR", "RR", "RRR", "RRR", "RRR", "RRR", "RR", "RR", "RRC"/*C podría ser offset*/, "RRC"/*faltan cosas*/, "D", "S", "D", "D", "S", "", ""};
+const char* operands[] = { "RC", "RRC", "RRC", "RRC", "RRC", "RC", "RC", "RR", "RR", "RRR", "RRR", "RRR", "RRR", "RR", "RR", "RRC"/*C podría ser offset*/, "RRC"/*faltan cosas*/, "D", "S", "D", "D", "S", "", "", ""};
 
 //Tamaños de operandos
 #define CONSTANTSIZE 16    //Tamaño en bits de una constante C (o dirección de datos si así se considera)
@@ -62,6 +62,7 @@ const int posoper[NUMINS][MAXNUMOPER] = { {3, 27, 0},
                                           {9, 0, 0},
                                           {9, 0, 0},
                                           {9, 0, 0},
+                                          {0, 0, 0},
                                           {0, 0, 0},
                                           {0, 0, 0} };
 
@@ -532,6 +533,14 @@ void ensambla(char* srcfilename, char* dstfilename)
             convBin(value, progmem[tablaR[i].PosRef] + (INSTSIZE - 1) - tablaR[i].BitPos, tablaR[i].Size);
         }
     }
+    convBin(26, progmem[512] + (INSTSIZE - 1) - 31, 8); // 26 es el opcode de reti en decimal
+    convBin(26, progmem[513] + (INSTSIZE - 1) - 31, 8);
+    convBin(26, progmem[514] + (INSTSIZE - 1) - 31, 8);
+    convBin(26, progmem[515] + (INSTSIZE - 1) - 31, 8);
+    convBin(26, progmem[516] + (INSTSIZE - 1) - 31, 8);
+    convBin(26, progmem[517] + (INSTSIZE - 1) - 31, 8);
+    convBin(26, progmem[518] + (INSTSIZE - 1) - 31, 8);
+    convBin(26, progmem[519] + (INSTSIZE - 1) - 31, 8);
 
     if ((outfile = fopen(dstfilename, "w")) == NULL) //Se abre en modo texto
     {

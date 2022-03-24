@@ -24,11 +24,22 @@ initial
 begin
   $dumpfile("./bin/cpu_tb.vcd");
   $dumpvars;
-  interrupcion <= 8'b0;
   for (idx = 0; idx < 16; idx = idx + 1) $dumpvars(0,cpu_tb.cpumono.camino_datos.banco_registros.regb[idx]);  
   reset = 1;  //a partir del flanco de subida del reset empieza el funcionamiento normal
   #10;
   reset = 0;  //bajamos el reset 
+
+  #50;
+  interrupcion = 8'b10010001;
+  #10
+  interrupcion = 8'b0;
+
+  //#200
+  #170
+  interrupcion = 8'b01010000;
+  #10
+  interrupcion = 8'b0;
+
 end
 
 reg signed [15:0] registros;
