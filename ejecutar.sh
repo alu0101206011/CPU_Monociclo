@@ -79,11 +79,11 @@ $EXECUTABLE $ASSEMBLY_CODE $MEMORY
 echo
 echo "Probando test bench"
 echo iverilog -o $VERILOG_EXECUTABLE $VERILOG_ALL $VERILOG_CODE
-iverilog -o $VERILOG_EXECUTABLE $VERILOG_ALL $VERILOG_CODE
-echo vvp $VERILOG_EXECUTABLE 
-echo
-vvp $VERILOG_EXECUTABLE | grep -v "VCD warning: array word cpu_tb.cpumono.camino_datos.banco_registros"
-
+if iverilog -o $VERILOG_EXECUTABLE $VERILOG_ALL $VERILOG_CODE; then 
+  echo vvp $VERILOG_EXECUTABLE 
+  echo
+  vvp $VERILOG_EXECUTABLE | grep -v "VCD warning: array word cpu_tb.cpumono.camino_datos.banco_registros"
+fi
 if [ $GTKWAVE == 1 ]; then
   echo
   echo "Abriendo GTKWave..."
