@@ -31,3 +31,9 @@ Si quiere saber todas las opciones ejecute en terminal:
 
 ./ejecutar.sh --help
 ```
+
+## Diseño de la CPU
+
+Este es el actual diseño de conexiones de la CPU.
+
+![Dibujo conexiones CPU](./img/conexion_cpu.png)
