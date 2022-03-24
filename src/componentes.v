@@ -96,7 +96,7 @@ module max_bit #(parameter WIDTH = 8) (input wire [WIDTH-1:0] a, output reg [WID
       if (a[i])
       begin
         b[i] = 1'b1;
-        i = -3;
+        i = 0;
       end
       else
         b[i] = 1'b0;

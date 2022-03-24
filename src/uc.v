@@ -28,7 +28,7 @@ module uc(input wire [7:0] opcode,
     s_reti <= 8'b0;
   end
 
-  always @(opcode, max_bit_s, max_bit_a)
+  always @(opcode, max_bit_a)
   begin
     if(max_bit_s > max_bit_a)
     begin
