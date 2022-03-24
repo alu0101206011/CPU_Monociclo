@@ -1,9 +1,9 @@
 `timescale 1 ns / 10 ps
 
-module cd(input wire clk, reset, s_rel_pc, s_inm, s_pila, s_datos, we3, wez, push, pop, 
+module cd(input wire clk, reset, s_rel_pc, s_inm, s_pila, s_datos, we3, wez, push, pop, oe,
           input wire [1:0] s_inc,
           input wire [2:0] op_alu, 
-          input wire [15:0] datos, 
+          inout wire [15:0] inout_datos, 
           input [7:0] int_e, s_calli, s_reti,
           output wire z, ALUoflow, uflow, oflow, 
           output wire [7:0] opcode, int_a, data_s,
@@ -38,6 +38,11 @@ module cd(input wire clk, reset, s_rel_pc, s_inm, s_pila, s_datos, we3, wez, pus
   // Interrupciones
   wire [9:0] dir_i;
   gestion_interrupcion #(8) GI(clk, reset, int_e, s_calli, s_reti, data_s, int_a, dir_i);
+
+
+  //transeiver
+  wire [15:0] datos;
+  transceiver tr(clk, reset, oe, rd1, datos, inout_datos);
   
   ffd ffz(clk, reset, zalu, wez, z);
 

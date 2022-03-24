@@ -3,7 +3,7 @@
 module uc(input wire [7:0] opcode, 
           input wire z, uflow, oflow, 
           input wire [7:0] data_s, int_a, 
-          output reg s_rel_pc, s_inm, s_pila, s_datos, we3, wez, push, pop, 
+          output reg s_rel_pc, s_inm, s_pila, s_datos, we3, wez, push, pop, oe, // añadir oe
           output reg [1:0] s_inc,
           output reg [2:0] op_alu, 
           output reg [7:0] s_calli, s_reti);
@@ -26,6 +26,7 @@ module uc(input wire [7:0] opcode,
     pop <= 1'b0;
     s_calli <= 8'b0;
     s_reti <= 8'b0;
+    oe <= 1'b0;
   end
 
   always @(opcode, max_bit_a)
