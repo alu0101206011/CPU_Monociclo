@@ -10,7 +10,7 @@ El objetivo de esta práctica es desarrollar una CPU básica monociclo. Esta CPU
 - Operaciones aritmetico-lógicas inmediatas
 - Salto absoluto, salto si cero, salto si no cero y relativo.
 - Modo de direcionamiento inmediato, directo y relativo. // hacer load y store
-- Gestión jerarquica de interrupciones // hacer gestión
+- Gestión jerarquica de interrupciones
 
 
 ## Manejo básico
@@ -37,3 +37,60 @@ Si quiere saber todas las opciones ejecute en terminal:
 Este es el actual diseño de conexiones de la CPU.
 
 ![Dibujo conexiones CPU](./img/conexion_cpu.png)
+
+
+## Codificación de instrucciones
+### Aritmetico-lógicas registros
+![Codificación de instrucciones aritmetico-lógicas por registros](./img/cod_arit_reg.png)
+| Instrucción       | OPCODE    | Descripción               |
+| :-----------:     | :-------: |---------------------------|
+| **ALU (R1))**     | 1000      | Carga                     |
+| **ALU (~R1)**     | 1001      | Complemento a 1           |
+| **ALU (R1+R2)**   | 1010      | Suma                      |
+| **ALU (R1-R2)**   | 1011      | Resta                     |
+| **ALU (R1&R2)**   | 1100      | AND                       |
+| **ALU (R1\|R2)**  | 1101      | OR                        |
+| **ALU (-R1)**     | 1110      | Complemento a 2           |
+| **ALU (-R2)**     | 1111      | Complemento a 2           |
+
+### Aritmetico lógicas inmediatas
+![Codificación de instrucciones aritmetico-lógicas inmediatas](./img/cod_arit_inm.png)
+| Instrucción       | OPCODE    | Descripción               |
+| :---------------: | :-------: |---------------------------|
+| **ALU (inm)**     | 1000      | Carga                     |
+| **ALU (~inm)**    | 1001      | Complemento a 1           |
+| **ALU (inm+b)**   | 1010      | Suma                      |
+| **ALU (b-inm)**   | 1011      | Resta                     |
+| **ALU (inm&b)**   | 1100      | AND                       |
+| **ALU (inm\|b)**  | 1101      | OR                        |
+| **ALU (-inm)**    | 1110      | Complemento a 2           |
+| **ALU (-inm)**    | 1111      | Complemento a 2           |
+
+
+### Memoria
+![Codificación de la instruccion load](./img/cod_load.png)
+![Codificación de la instruccion loadr](./img/cod_loadr.png)
+![Codificación de la instrucción store](./img/cod_store.png)
+| Instrucción   | OPCODE    | Descripción                   |
+| :-----------: | :-------: |-------------------------------|
+| **LOAD**      | 00010000  | Carga de memoria              |
+| **LOADR**     | 00010001  | Carga de memoria por registro |
+| **STORE**     | 00010010  | Carga en memoria              |
+
+### Saltos
+![Codificación de instrucciones de salto absoluto](./img/cod_j.png)
+![Codificación de instrucciones de salto relativo](./img/cod_jr.png)
+| Instrucción   | OPCODE    | Descripción               |
+| :-----------: | :-------: |---------------------------|
+| **j**         | 00010100  | Salto absoluto            |
+| **jr**        | 00010101  | Salto relativo            |
+| **jz**        | 00010110  | Salto si cero             |
+| **jnz**       | 00010110  | Salto si no cero          |
+| **jcall**     | 00010111  | Salto relativo a subrutina|
+| **jret**      | 00010111  | Retorno de subrutina      |
+| **reti**      | 00010111  | Retorno de interrupción   |
+
+### Resto de instrucciones
+| Instrucción   | OPCODE    | Descripción               |
+| :-----------: | :-------: |---------------------------|
+| **nop**       | 00010111  | Instrucción vacía         |
