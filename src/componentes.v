@@ -105,10 +105,10 @@ module max_bit #(parameter WIDTH = 8) (input wire [WIDTH-1:0] a, output reg [WID
 
 endmodule
     
-module transceiver(input wire clk, reset, oe, input wire [15:0] in, output wire [15:0] out, inout wire [15:0] bidir);
+module transceiver(input wire clk, reset, oe, input wire [15:0] in, output reg [15:0] out, inout wire [15:0] bidir);
   always @(posedge clk, posedge reset)
   begin
     out <= bidir;
-    bidir <= oe ? in : 16'bz;
   end
+  assign bidir = oe ? in : 16'bz;
 endmodule

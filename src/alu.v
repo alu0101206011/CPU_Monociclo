@@ -18,7 +18,7 @@ module alu #(parameter WIDTH = 15) (input wire [WIDTH:0] a, b,
       3'b100: s = a & b;
       3'b101: s = a | b;
       3'b110: s = -a;  //pueden dar ov
-      3'b111: s = -a;  //puede dar ov
+      3'b111: s = s_inm ? -a : -b;  //puede dar ov
     default: s = 'bx; //desconocido en cualquier otro caso (x � z), por si se modifica el código
     endcase
   end

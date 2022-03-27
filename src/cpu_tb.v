@@ -35,8 +35,8 @@ begin
   interrupcion = 8'b0;
 
   #200
-  interrupcion = 8'b01010000;
-  #10
+  interrupcion = 8'b10100000;
+  #35
   interrupcion = 8'b0;
 
 end

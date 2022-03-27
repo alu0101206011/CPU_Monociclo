@@ -6,17 +6,17 @@ module cd(input wire clk, reset, s_rel_pc, s_inm, s_pila, s_datos, we3, wez, pus
           inout wire [15:0] inout_datos, 
           input [7:0] int_e, s_calli, s_reti,
           output wire z, ALUoflow, uflow, oflow, 
-          output wire [7:0] opcode, int_a, data_s,
+          output wire [7:0] opcode, max_bit_a, max_bit_s,
           output wire [15:0] direcciones);
   
   wire[31:0] instruccion;
-  wire[9:0] sal_PC, sal_muxINC, sal_sumpc, sal_muxREL, sal_muxPila;
+  wire[9:0] sal_PC, sal_muxINC, sal_sumpc, sal_muxREL, sal_muxPila, dir_interrupcion;
 
   // Incremento
   registro #(10) PC(clk, reset, sal_muxPila, sal_PC);  // impedir que se escriba
   mux2 #(10) muxREL(10'b1, instruccion[9:0], s_rel_pc, sal_muxREL);
   sum sumINC(sal_muxREL, sal_PC, sal_sumpc);
-  mux4 #(10) muxINC(sal_sumpc, instruccion[9:0], dir_i, 10'b0, s_inc, sal_muxINC); //PROBLEMA DE SINCRONIZACIÓN, LA INTERRUPCIÓN PASA DEMASIADO DEPRISA
+  mux4 #(10) muxINC(sal_sumpc, instruccion[9:0], dir_interrupcion, 10'b0, s_inc, sal_muxINC); //PROBLEMA DE SINCRONIZACIÓN, LA INTERRUPCIÓN PASA DEMASIADO DEPRISA
 
   // Pila
   wire[9:0] sal_stack;
@@ -28,6 +28,7 @@ module cd(input wire clk, reset, s_rel_pc, s_inm, s_pila, s_datos, we3, wez, pus
   memprog memoria(clk, sal_PC, instruccion);
 
   // Datos
+  wire [15:0] datos;
   wire zalu, carry; // hacer algo con carry y overflow
   wire[15:0] rd1, rd2, wd, sal_ALU, sal_muxINM;
   regfile banco_registros(clk, we3, instruccion[11:8], instruccion[7:4], instruccion[3:0], wd, rd1, rd2);
@@ -36,12 +37,12 @@ module cd(input wire clk, reset, s_rel_pc, s_inm, s_pila, s_datos, we3, wez, pus
   alu ALU(sal_muxINM, rd2, s_inm, op_alu, sal_ALU, carry, ALUoflow, zalu);
 
   // Interrupciones
-  wire [9:0] dir_i;
-  gestion_interrupcion #(8) GI(clk, reset, int_e, s_calli, s_reti, data_s, int_a, dir_i);
-
+  wire [7:0] data_s, int_a;
+  gestion_interrupcion #(8) GI(clk, reset, int_e, s_calli, s_reti, data_s, int_a, dir_interrupcion);
+  max_bit Interrupcion_s(data_s, max_bit_s);
+  max_bit Interrupcion_a(int_a, max_bit_a);
 
   //transeiver
-  wire [15:0] datos;
   transceiver tr(clk, reset, oe, rd1, datos, inout_datos);
   
   ffd ffz(clk, reset, zalu, wez, z);

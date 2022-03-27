@@ -2,16 +2,12 @@
 
 module uc(input wire [7:0] opcode, 
           input wire z, uflow, oflow, 
-          input wire [7:0] data_s, int_a, 
+          input wire [7:0] max_bit_s, max_bit_a, 
           output reg s_rel_pc, s_inm, s_pila, s_datos, we3, wez, push, pop, oe, // añadir oe
           output reg [1:0] s_inc,
           output reg [2:0] op_alu, 
           output reg [7:0] s_calli, s_reti);
 
-  wire [7:0] max_bit_s, max_bit_a;
-  max_bit Interrupcion_s(data_s, max_bit_s);
-  max_bit Interrupcion_a(int_a, max_bit_a);
-  
   initial
   begin
     op_alu <= 3'b000; 
@@ -62,7 +58,7 @@ module uc(input wire [7:0] opcode,
         end
         8'b0000xxxx:  // Alu (a)
         begin
-          op_alu <= 3'b000;
+          op_alu <= opcode[6:4];
           s_inc <= 2'b00;
           we3 <= 1'b1;
           wez <= 1'b1;
@@ -144,19 +140,19 @@ module uc(input wire [7:0] opcode,
             push <= 1'b0;
             pop <= 1'b0;
         end
-        8'b00010000: // Direccionamiento inmediato   opcode e inmediato (16 bits)
+        8'b00010000: // LOAD POR MEMORIA 
         begin
           
         end
-        8'b00010001: // Direccionamiento directo     opcode y direccion de memoria (por el cable datos está el operando)  (16 bits)
+        8'b00010001: // LOAD POR REGISTROS RELATIVO (si le sumas 0 es directo)
         begin
           
         end
-        8'b00010010: // Direccionamiento directo por registro   opcode y registro (4 bits)
+        8'b00010010: // STORE MEMORIA RELATIVO 
         begin
           
         end
-        8'b00010011: // Direccionamiento relativo   opcode y registro 24 bits 
+        8'b00010011:
         begin
           
         end
@@ -271,21 +267,5 @@ module uc(input wire [7:0] opcode,
           pop <= 1'b0;
         end
       endcase
-    // hacer un return especial porque hace un par de cosas
-    // 2 registros  Solicitud  Atencion
-
-    // 8 lineas de interrupcion del exterior
-    // Solicitud baja cuando quiere
-    // Returni
-    // s_returni de 3 bits o de 8
-    // hacemos una caja en la que haya un we entre un s_reti
-    // que hay que poner dentro de la caja? en la caja enetran
-    // 
-
   end
-
-  // nos acaban de decir de hacer una memoria nueva
-
-  
-
 endmodule
