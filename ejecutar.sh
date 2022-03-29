@@ -81,7 +81,7 @@ if g++ -o $EXECUTABLE $ASSEMBLY; then
   if iverilog -o $VERILOG_EXECUTABLE $VERILOG_ALL $VERILOG_CODE; then 
     echo vvp $VERILOG_EXECUTABLE 
     echo
-    vvp $VERILOG_EXECUTABLE | grep -v "VCD warning: array word cpu_tb.cpumono.camino_datos.banco_registros"
+    vvp $VERILOG_EXECUTABLE | grep -v "VCD warning: array word cpu_tb.cpumono.camino_datos."
   fi
 fi
 if [ $GTKWAVE == 1 ]; then
