@@ -9,7 +9,7 @@
 #include <string.h>
 #include <ctype.h>
 
- /*Var globales*/
+/*Var globales*/
 
 //Definición del lenguaje ensamblador
 
@@ -40,7 +40,7 @@ const char* operands[] = { "RC", "RRC", "RRC", "RRC", "RRC", "RC", "RC", "RR", "
 #define NUMINS (sizeof(mnemonics)/sizeof(mnemonics[0]))     //Número de instrucciones deducido de la matriz de nemónicos
 
 //Posiciones (bit más significativo) de los operandos en la instrucción (de INSTSIZE-1 a 1), 0 significa no usado (no hay operandos de sólo 1 bit)
-const int posoper[][MAXNUMOPER] = { {3, 27, 0},
+const int posoper[NUMINS][MAXNUMOPER] = { {3, 27, 0},
                                           {3, 7, 27},
                                           {3, 7, 27},
                                           {3, 7, 27},
