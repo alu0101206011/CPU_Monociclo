@@ -5,7 +5,7 @@ module cd(input wire clk, reset, s_rel_pc, s_inm, s_pila, s_datos, we3, wez, pus
           input wire [2:0] op_alu, 
           inout wire [15:0] inout_datos, 
           input [7:0] int_e, s_calli, s_reti,
-          output wire z, ALUoflow, uflow, oflow, 
+          output wire z, c, overflow, 
           output wire [7:0] opcode, min_bit_a, min_bit_s,
           output wire [15:0] direcciones);
   
@@ -21,7 +21,7 @@ module cd(input wire clk, reset, s_rel_pc, s_inm, s_pila, s_datos, we3, wez, pus
   // Pila
   wire[9:0] sal_stack;
   wire s_interr;
-  pila stack(clk, reset, push, pop, s_interr, sal_PC, sal_stack, uflow, oflow);
+  pila stack(clk, reset, push, pop, s_interr, sal_PC, sal_stack, Stackuflow, Stackoflow);
   mux2 #(10) muxStack(sal_muxINC, sal_stack, s_pila, sal_muxPila);
 
   // Memoria
@@ -35,6 +35,10 @@ module cd(input wire clk, reset, s_rel_pc, s_inm, s_pila, s_datos, we3, wez, pus
   mux2 #(16) muxDATOS(sal_ALU, datos, s_datos, wd);
   mux2 #(16) muxINM(rd1, instruccion[27:12], s_inm, sal_muxINM);
   alu ALU(sal_muxINM, rd2, s_inm, op_alu, sal_ALU, carry, ALUoflow, zalu);
+  ffd ffz(clk, reset, zalu, wez, z);
+  ffd ffc(clk, reset, carry, wez, c);
+  assign oflow = oflow | ALUoflow;
+  ffd ffo(clk, reset, oflow, wez, overflow);
 
   // Interrupciones
   gestion_interrupcion #(8) GI(clk, reset, int_e, s_calli, s_reti, s_interr, min_bit_s, min_bit_a, dir_interrupcion);
@@ -42,7 +46,7 @@ module cd(input wire clk, reset, s_rel_pc, s_inm, s_pila, s_datos, we3, wez, pus
   //transeiver
   transceiver tr(clk, reset, oe, rd1, datos, inout_datos);
   
-  ffd ffz(clk, reset, zalu, wez, z);
+
 
   assign opcode = instruccion[31:24];
 

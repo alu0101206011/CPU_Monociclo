@@ -25,17 +25,19 @@ begin
   $dumpfile("./bin/cpu_tb.vcd");
   $dumpvars;
   for (idx = 0; idx < 16; idx = idx + 1) $dumpvars(0,cpu_tb.cpumono.camino_datos.banco_registros.regb[idx]);  
+  for (idx = 0; idx < 16; idx = idx + 1) $dumpvars(0,cpu_tb.cpumono.camino_datos.stack.mempila[idx]);
+
   reset = 1;  //a partir del flanco de subida del reset empieza el funcionamiento normal
   #10;
   reset = 0;  //bajamos el reset 
 
   #50;
-  interrupcion = 8'b10010001;
+  interrupcion = 8'b10010100;
   #10
   interrupcion = 8'b0;
 
   #200
-  interrupcion = 8'b10100000;
+  interrupcion = 8'b10100010;
   #35
   interrupcion = 8'b0;
 

@@ -1,7 +1,7 @@
 `timescale 1 ns / 10 ps
 
 module uc(input wire [7:0] opcode, 
-          input wire z, uflow, oflow, 
+          input wire z, c, overflow, 
           input wire [7:0] min_bit_s, min_bit_a, 
           output wire s_rel_pc, s_inm, s_pila, s_datos, we3, wez, push, pop, oe,
           output wire [1:0] s_inc,
@@ -31,10 +31,11 @@ module uc(input wire [7:0] opcode,
 
   always @(opcode, min_bit_a)
   begin
-    if (uflow || oflow)
+    if (overflow)
     begin
       s_reti <= 8'b0;
-      s_calli <= 8'b10000000;
+      s_calli <= 8'b00000001;
+      control <= INTERRUPCION_NUEVA;
     end
     else if((min_bit_s != 0 && min_bit_a == 0) || min_bit_s < min_bit_a)
     begin
@@ -65,9 +66,10 @@ module uc(input wire [7:0] opcode,
               8'bxxxx0100: control <= SALTO_REL;
               8'bxxxx0101: control <= z ? SALTO_AB : NOP; // jz
               8'bxxxx0110: control <= z ? NOP : SALTO_AB; // jnz
-              8'bxxxx0111: control <= CALL;
-              8'bxxxx1000: control <= RETURN;
-              8'bxxxx1001:  // reti interrupcion
+              8'bxxxx0111: control <= c ? SALTO_AB : NOP; // jne
+              8'bxxxx1000: control <= CALL;
+              8'bxxxx1001: control <= RETURN;  
+              8'bxxxx1010: // reti interrupcion
               begin
                 control <= RETURN;
                 s_reti <= min_bit_a;

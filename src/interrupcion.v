@@ -34,7 +34,7 @@ module gestion_interrupcion #(parameter WIDTH = 8) (input wire clk, reset,
   always @(sel_a)
   begin
     casex (sel_a)
-      8'bxxxxxxx1: dir = 10'b1000000000;
+      8'bxxxxxxx1: dir = 10'b1111111100;
       8'bxxxxxx10: dir = 10'b1000000001;
       8'bxxxxx100: dir = 10'b1000000010;
       8'bxxxx1000: dir = 10'b1000000011;

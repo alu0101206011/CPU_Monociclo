@@ -1,12 +1,12 @@
 `timescale 1 ns / 10 ps
 
-module alu #(parameter WIDTH = 15) (input wire [WIDTH:0] a, b,
+module alu #(parameter WIDTH = 16) (input wire [WIDTH-1:0] a, b,
            input wire s_inm,
            input wire [2:0] op_alu,
-           output wire [WIDTH:0] y,
+           output wire [WIDTH-1:0] y,
            output wire carry, overflow, zero);
 
-  reg [WIDTH:0] s; // un bit mas de carry
+  reg [WIDTH-1:0] s; // un bit mas de carry
          
   always @(a, b, op_alu)
   begin
@@ -30,12 +30,12 @@ module alu #(parameter WIDTH = 15) (input wire [WIDTH:0] a, b,
 
   wire ovSuma, ovResta, ovC2;
 
-  assign ovSuma = (op_alu == 3'b010) & ((!a[WIDTH] & !b[WIDTH] & !y[WIDTH]) | ((a[WIDTH] & b[WIDTH] & y[WIDTH])));  // mirar si funciona
-  assign ovResta = (op_alu == 3'b011) & ((!a[WIDTH] & b[WIDTH] & y[WIDTH]) | ((a[WIDTH] & !b[WIDTH] & !y[WIDTH])));
-  assign ovC2 = (op_alu == 3'b110 | op_alu == 3'b111) & ((a[WIDTH] == 1'b1) & (a[WIDTH-1:0] == 0));
+  assign ovSuma = (op_alu == 3'b010) & ((!a[WIDTH-1] & !b[WIDTH-1] & !y[WIDTH-1]) | ((a[WIDTH-1] & b[WIDTH-1] & y[WIDTH-1])));  // mirar si funciona
+  assign ovResta = (op_alu == 3'b011) & ((!s_inm & !a[WIDTH-1] & b[WIDTH-1] & y[WIDTH-1]) | (s_inm & a[WIDTH-1] & !b[WIDTH-1] & y[WIDTH-1]) | (!s_inm & (a[WIDTH-1] & !b[WIDTH-1] & !y[WIDTH-1])) | (s_inm & (!a[WIDTH-1] & b[WIDTH-1] & !y[WIDTH-1])));
+  assign ovC2 = (op_alu == 3'b110 | op_alu == 3'b111) & ((a[WIDTH-1] == 1'b1) & (a[WIDTH-1-1:0] == 0));
   assign overflow = ovSuma | ovResta | ovC2;
 
-  assign carry = (op_alu == 3'b011 && (a < b)) || (op_alu == 3'b010 && y[WIDTH]);
+  assign carry = (op_alu == 3'b011 & (((!s_inm) & (a < b)) | ((s_inm) & (b < a)))) | (op_alu == 3'b010 & y[WIDTH-1]);
 
 
   //Calculo del flag de cero
@@ -52,4 +52,4 @@ endmodule
 // mirar casos especificos 1000
 
 //Borrow llevado al accarreo 
-// C = (resta && (a < b)) || )(suma && s[WIDTH])
+// C = (resta && (a < b)) || )(suma && s[WIDTH-1])
