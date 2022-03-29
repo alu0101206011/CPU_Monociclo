@@ -14,9 +14,10 @@ endmodule
 
 module gestion_interrupcion #(parameter WIDTH = 8) (input wire clk, reset, 
                                                     input wire [WIDTH-1:0] int_e, s_calli, s_reti, 
-                                                    output wire [WIDTH-1:0] data_s, int_a,
+                                                    output wire s_interr,
+                                                    output wire [WIDTH-1:0] min_bit_s, min_bit_a,
                                                     output reg [9:0] dir);
-  wire [WIDTH-1:0] int_s, data_a, max_bit_a; 
+  wire [WIDTH-1:0] int_s, data_s, int_a, data_a, sel_a; 
 
   registro #(WIDTH) Solicitud(clk, reset, data_s, int_s);
   registro #(WIDTH) Atencion(clk, reset, data_a, int_a);
@@ -24,19 +25,23 @@ module gestion_interrupcion #(parameter WIDTH = 8) (input wire clk, reset,
   gestion_solucitud GS(int_e, int_s, s_reti, data_s);
   gestion_atencion GA(int_a, s_calli, s_reti, data_a);
 
-  max_bit maxA(data_a, max_bit_a);
+  max_priority_bit selA(data_a, sel_a);
+  max_priority_bit maxS(data_s, min_bit_s);
+  max_priority_bit maxA(int_a, min_bit_a);
 
-  always @(max_bit_a) 
+  assign s_interr = int_a > 8'b0 ? 1'b1 : 1'b0;
+
+  always @(sel_a)
   begin
-    casex (max_bit_a)
-      8'b1xxxxxxx: dir = 10'b1000000000;
-      8'b01xxxxxx: dir = 10'b1000000001;
-      8'b001xxxxx: dir = 10'b1000000010;
-      8'b0001xxxx: dir = 10'b1000000011;
-      8'b00001xxx: dir = 10'b1000000100;
-      8'b000001xx: dir = 10'b1000000101;
-      8'b0000001x: dir = 10'b1000000110;
-      8'b00000001: dir = 10'b1000000111;
+    casex (sel_a)
+      8'bxxxxxxx1: dir = 10'b1000000000;
+      8'bxxxxxx10: dir = 10'b1000000001;
+      8'bxxxxx100: dir = 10'b1000000010;
+      8'bxxxx1000: dir = 10'b1000000011;
+      8'bxxx10000: dir = 10'b1000000100;
+      8'bxx100000: dir = 10'b1000000101;
+      8'bx1000000: dir = 10'b1000000110;
+      8'b10000000: dir = 10'b1000000111;
       default: dir = 10'bx; 
     endcase
   end

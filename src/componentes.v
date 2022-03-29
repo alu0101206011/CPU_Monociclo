@@ -81,28 +81,16 @@ module ffd(input wire clk, reset, d, carga, output reg q);
 
 endmodule 
 
-module max_bit #(parameter WIDTH = 8) (input wire [WIDTH-1:0] a, output reg [WIDTH-1:0] b);
-
+module max_priority_bit #(parameter WIDTH = 8) (input wire [WIDTH-1:0] a, output reg [WIDTH-1:0] b);
   initial
-    b <= 0;
+    b <= 0; 
 
-  integer i;
-  always @(a)
-  begin
-    for (i = WIDTH - 1; i >= 0; i = i - 1)
-    begin
-      if (i == WIDTH - 1)
-        b = 0; 
-      if (a[i])
-      begin
-        b[i] = 1'b1;
-        i = 0;
-      end
-      else
-        b[i] = 1'b0;
-    end
-  end
+  always @(*)
+    b <= c;
 
+  wire[WIDTH-1:0] c;
+  assign c = a&-a;
+  
 endmodule
     
 module transceiver(input wire clk, reset, oe, input wire [15:0] in, output reg [15:0] out, inout wire [15:0] bidir);

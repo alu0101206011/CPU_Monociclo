@@ -6,7 +6,7 @@ module cd(input wire clk, reset, s_rel_pc, s_inm, s_pila, s_datos, we3, wez, pus
           inout wire [15:0] inout_datos, 
           input [7:0] int_e, s_calli, s_reti,
           output wire z, ALUoflow, uflow, oflow, 
-          output wire [7:0] opcode, max_bit_a, max_bit_s,
+          output wire [7:0] opcode, min_bit_a, min_bit_s,
           output wire [15:0] direcciones);
   
   wire[31:0] instruccion;
@@ -37,17 +37,13 @@ module cd(input wire clk, reset, s_rel_pc, s_inm, s_pila, s_datos, we3, wez, pus
   alu ALU(sal_muxINM, rd2, s_inm, op_alu, sal_ALU, carry, ALUoflow, zalu);
 
   // Interrupciones
-  wire [7:0] data_s, int_a;
-  gestion_interrupcion #(8) GI(clk, reset, int_e, s_calli, s_reti, data_s, int_a, dir_interrupcion);
-  max_bit Interrupcion_s(data_s, max_bit_s);
-  max_bit Interrupcion_a(int_a, max_bit_a);
+  gestion_interrupcion #(8) GI(clk, reset, int_e, s_calli, s_reti, s_interr, min_bit_s, min_bit_a, dir_interrupcion);
 
   //transeiver
   transceiver tr(clk, reset, oe, rd1, datos, inout_datos);
   
   ffd ffz(clk, reset, zalu, wez, z);
 
-  assign s_interr = int_a > 8'b0 ? 1'b1 : 1'b0;
   assign opcode = instruccion[31:24];
 
 endmodule

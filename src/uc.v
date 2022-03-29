@@ -2,8 +2,8 @@
 
 module uc(input wire [7:0] opcode, 
           input wire z, uflow, oflow, 
-          input wire [7:0] max_bit_s, max_bit_a, 
-          output wire s_rel_pc, s_inm, s_pila, s_datos, we3, wez, push, pop, oe, // añadir oe
+          input wire [7:0] min_bit_s, min_bit_a, 
+          output wire s_rel_pc, s_inm, s_pila, s_datos, we3, wez, push, pop, oe,
           output wire [1:0] s_inc,
           output reg [2:0] op_alu, 
           output reg [7:0] s_calli, s_reti);
@@ -11,9 +11,9 @@ module uc(input wire [7:0] opcode,
   parameter INTERRUPCION_NUEVA = 11'b00000010010;
   parameter ARIT_R = 11'b00001100000;
   parameter ARIT_I = 11'b01001100000;
-  parameter LOAD = 1'b0;
-  parameter LOADR = 1'b0;
-  parameter STORE = 1'b0;
+  parameter LOAD = 11'b01011100100;   // no probado
+  parameter LOADR = 11'b01011100100;  // no probado
+  parameter STORE = 11'b01010000100;  // no probado
   parameter SALTO_AB = 11'b00000000001;
   parameter SALTO_REL = 11'b10000000000;
   parameter NOP = 11'b00000000000;
@@ -29,15 +29,20 @@ module uc(input wire [7:0] opcode,
     s_reti = 8'b0;
   end
 
-  always @(opcode, max_bit_a)
+  always @(opcode, min_bit_a)
   begin
-    if(max_bit_s > max_bit_a)
+    if (uflow || oflow)
     begin
       s_reti <= 8'b0;
-      s_calli <= max_bit_s;
+      s_calli <= 8'b10000000;
+    end
+    else if((min_bit_s != 0 && min_bit_a == 0) || min_bit_s < min_bit_a)
+    begin
+      s_reti <= 8'b0;
+      s_calli <= min_bit_s;
       control <= INTERRUPCION_NUEVA;
     end
-    if (max_bit_s == max_bit_a)
+    if (min_bit_s == min_bit_a)
       casex (opcode)
         8'b1xxxxxxx: // aritmetico-lógico registros
         begin
@@ -65,7 +70,7 @@ module uc(input wire [7:0] opcode,
               8'bxxxx1001:  // reti interrupcion
               begin
                 control <= RETURN;
-                s_reti <= max_bit_a;
+                s_reti <= min_bit_a;
                 s_calli <= 8'b0;
               end
               8'bxxxx1111: control <= NOP;
