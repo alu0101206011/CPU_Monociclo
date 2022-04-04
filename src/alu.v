@@ -30,7 +30,7 @@ module alu #(parameter WIDTH = 16) (input wire [WIDTH-1:0] a, b,
 
   wire ovSuma, ovResta, ovC2;
 
-  assign ovSuma = (op_alu == 3'b010) & ((!a[WIDTH-1] & !b[WIDTH-1] & !y[WIDTH-1]) | ((a[WIDTH-1] & b[WIDTH-1] & y[WIDTH-1])));  // mirar si funciona
+  assign ovSuma = (op_alu == 3'b010) & ((!a[WIDTH-1] & !b[WIDTH-1] & y[WIDTH-1]) | ((a[WIDTH-1] & b[WIDTH-1] & !y[WIDTH-1])));
   assign ovResta = (op_alu == 3'b011) & ((!s_inm & !a[WIDTH-1] & b[WIDTH-1] & y[WIDTH-1]) | (s_inm & a[WIDTH-1] & !b[WIDTH-1] & y[WIDTH-1]) | (!s_inm & (a[WIDTH-1] & !b[WIDTH-1] & !y[WIDTH-1])) | (s_inm & (!a[WIDTH-1] & b[WIDTH-1] & !y[WIDTH-1])));
   assign ovC2 = (op_alu == 3'b110 | op_alu == 3'b111) & ((a[WIDTH-1] == 1'b1) & (a[WIDTH-1-1:0] == 0));
   assign overflow = ovSuma | ovResta | ovC2;

@@ -5,7 +5,7 @@ module cpu_tb;
 
 reg clk, reset;
 wire [15:0] datos, direcciones;
-reg [7:0] interrupcion;
+wire [7:0] interrupcion;
 integer idx;
 
 // generación de reloj clk
@@ -20,6 +20,9 @@ end
 // instanciación del procesador
 cpu cpumono(clk, reset, datos, interrupcion, direcciones);
 
+// timer
+timer contador(clk, reset, 8'd7, interrupcion);
+
 initial
 begin
   $dumpfile("./bin/cpu_tb.vcd");
@@ -30,16 +33,6 @@ begin
   reset = 1;  //a partir del flanco de subida del reset empieza el funcionamiento normal
   #10;
   reset = 0;  //bajamos el reset 
-
-  #50;
-  interrupcion = 8'b10010100;
-  #10
-  interrupcion = 8'b0;
-
-  #200
-  interrupcion = 8'b10100010;
-  #35
-  interrupcion = 8'b0;
 
 end
 

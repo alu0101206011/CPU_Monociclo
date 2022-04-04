@@ -1,6 +1,6 @@
 jcall pepe
-li r7 32767
-addi r3 r7 32767
+li r7 -32768
+subi r3 r7 32767
 jne end2
 j end
 
