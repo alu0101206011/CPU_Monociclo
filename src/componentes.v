@@ -47,6 +47,19 @@ module registro #(parameter WIDTH = 8)
 
 endmodule
 
+//modulo registro para modelar el PC, cambia en cada flanco de subida de reloj o de reset
+module registro2 #(parameter WIDTH = 8)
+              (input wire             clk, reset,
+               input wire s,
+               input wire [WIDTH-1:0] d, 
+               output reg [WIDTH-1:0] q);
+
+  always @(posedge clk, posedge reset)
+    if (reset)  q <= 0;
+    else if (s) q <= d;
+
+endmodule
+
 //modulo multiplexor, si s=1 sale d1, s=0 sale d0
 module mux2 #(parameter WIDTH = 8)
              (input  wire [WIDTH-1:0] d0, d1, 
@@ -86,11 +99,8 @@ module max_priority_bit #(parameter WIDTH = 8) (input wire [WIDTH-1:0] a, output
     b <= 0; 
 
   always @(*)
-    b <= c;
+    b <= a&-a;
 
-  wire[WIDTH-1:0] c;
-  assign c = a&-a;
-  
 endmodule
     
 module transceiver(input wire clk, reset, oe, input wire [15:0] in, output reg [15:0] out, inout wire [15:0] bidir);
