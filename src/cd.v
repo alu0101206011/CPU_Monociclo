@@ -37,7 +37,7 @@ module cd(input wire clk, reset, s_rel_pc, s_inm, s_pila, s_datos, we3, wez, pus
   alu ALU(sal_muxINM, rd2, s_inm, op_alu, sal_ALU, carry, ALUoflow, zalu);
   ffd ffz(clk, reset, zalu, wez, z);
   ffd ffc(clk, reset, carry, wez, c);
-  assign oflow = oflow | ALUoflow;
+  assign oflow = Stackuflow | Stackoflow | ALUoflow;
   ffd ffo(clk, reset, oflow, wez, overflow);
 
   // Interrupciones

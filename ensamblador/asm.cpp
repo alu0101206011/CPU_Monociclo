@@ -557,6 +557,7 @@ void ensambla(char* srcfilename, char* dstfilename)
     }
     for (int i = 0; i < 8; i++)
         convBin(convertBinaryToDecimal(atoi(opcodes[25])), progmem[512 + i] + (INSTSIZE - 1) - 31, 8); // opcode de reti en decimal opcodes[24]
+    convBin(convertBinaryToDecimal(atoi(opcodes[25])), progmem[1020] + (INSTSIZE - 1) - 31, 8); // opcode de reti en decimal opcodes[24]
 
 
     if ((outfile = fopen(dstfilename, "w")) == NULL) //Se abre en modo texto

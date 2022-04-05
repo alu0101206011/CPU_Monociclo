@@ -4,7 +4,9 @@ module cpu_tb;
 
 
 reg clk, reset;
-wire [15:0] datos, direcciones;
+wire [15:0] datos, direcciones, leds;
+reg [15:0] botones;
+wire ce;
 wire [7:0] interrupcion;
 integer idx;
 
@@ -17,7 +19,10 @@ begin
   #30;
 end
 
-// instanciación del procesador
+// instancia entrada salida
+e_s entada_salida(clk, reset, direcciones, botones, datos, ce, leds);
+
+// instancia del procesador
 cpu cpumono(clk, reset, datos, interrupcion, direcciones);
 
 // timer
@@ -33,6 +38,11 @@ begin
   reset = 1;  //a partir del flanco de subida del reset empieza el funcionamiento normal
   #10;
   reset = 0;  //bajamos el reset 
+
+  #30
+  botones = 16'b1;
+  #10
+  botones = 16'b0;
 
 end
 
