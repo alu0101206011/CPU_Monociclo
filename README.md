@@ -1,15 +1,15 @@
-# Implementacion de una CPU monociclo
+# Diseño de procesadores 2021-2022 Implementacion de una CPU monociclo
 
 ## Objetivo
 El objetivo de esta práctica es desarrollar una CPU básica monociclo. Esta CPU en concreto es la CPU "avanzada" la cual posee las siguientes características:
 
 - Tiene un tamaño de palabra de 32 bits.
 - Posee una memoria de programa con un máximo de 1024 instrucciones.
-- Una pila para subrutinas con control de overflow y underflow. // hacer control de overflow y underflow
+- Una pila para subrutinas con control de overflow y underflow.
 - Operaciones aritmetico-lógicas con registros.
 - Operaciones aritmetico-lógicas inmediatas
 - Salto absoluto, salto si cero, salto si no cero y relativo.
-- Modo de direcionamiento inmediato, directo y relativo. // hacer load y store
+- Modo de direcionamiento inmediato, directo y relativo.
 - Gestión jerarquica de interrupciones
 
 
