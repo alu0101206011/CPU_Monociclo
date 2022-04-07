@@ -36,12 +36,12 @@ module gestion_interrupcion #(parameter WIDTH = 8) (input wire clk, reset,
     casex (sel_a)
       8'bxxxxxxx1: dir = 10'b1111111100;
       8'bxxxxxx10: dir = 10'b1000000001;
-      8'bxxxxx100: dir = 10'b1000000010;
-      8'bxxxx1000: dir = 10'b1000000011;
-      8'bxxx10000: dir = 10'b1000000100;
-      8'bxx100000: dir = 10'b1000000101;
-      8'bx1000000: dir = 10'b1000000110;
-      8'b10000000: dir = 10'b1000000111;
+      8'bxxxxx100: dir = 10'b1000000110; 
+      8'bxxxx1000: dir = 10'b1000001011;
+      8'bxxx10000: dir = 10'b1000010000;
+      8'bxx100000: dir = 10'b1000010101;
+      8'bx1000000: dir = 10'b1000011010;
+      8'b10000000: dir = 10'b1000011111;
       default: dir = 10'bx; 
     endcase
   end

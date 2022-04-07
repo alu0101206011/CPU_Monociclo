@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}/../ensamblador/asm",
-            "args": ["../ensamblador/codigo1.asm", "../progfile.mem"],
+            "args": ["../ensamblador/codes/codigo.asm", "../progfile.mem", "../ensamblador/interruption_codes/generic.asm", "../ensamblador/interruption_codes/int1.asm", "../ensamblador/interruption_codes/simple_led_control.asm"],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],

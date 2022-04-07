@@ -16,7 +16,7 @@ ASSEMBLY=$ASSEMBLY_SOURCE/asm.cpp
 EXECUTABLE=$ASSEMBLY_SOURCE/ensamblador.out
 EXECUTABLE_DEBUG=$ASSEMBLY_SOURCE/asm
 ASSEMBLY_CODE=$ASSEMBLY_CODE_SOURCE/codigo.asm
-ASSEMBLY_INTERRUPTION_CODE=$ASSEMBLY_INTERRUPTION_CODE_SOURCE/int1.asm
+ASSEMBLY_INTERRUPTION_CODES=$(ls $ASSEMBLY_INTERRUPTION_CODE_SOURCE/*)
 VERILOG_WALL=
 VERILOG_CODE=$(ls $VERILOG_CODE_SOURCE/* | grep -v _tb.v)
 TEST_BENCH=$VERILOG_CODE_SOURCE/cpu_tb.v
@@ -27,10 +27,17 @@ DEBUG_ON=0
 
 # Funciones
 
-exit_error() {
+exit_error_command_line() {
   echo "---------  $1  ---------" 1>&2
   echo
   usage
+  exit 1
+}
+
+exit_error() {
+  echo
+  echo "---------  $1  ---------" 1>&2
+  echo
   exit 1
 }
 
@@ -67,7 +74,7 @@ while [ "$1" != "" ]; do
       if [[ "$1" != "" && "$1" != -* ]]; then
         ASSEMBLY_CODE=$ASSEMBLY_CODE_SOURCE/$1
       else
-        exit_error "Faltan argumentos"
+        exit_error_command_line "Faltan argumentos"
       fi
       ;;
     -w | --Wall )
@@ -78,11 +85,11 @@ while [ "$1" != "" ]; do
       if [[ "$1" != "" && "$1" != -* ]]; then
         TEST_BENCH=$VERILOG_CODE_SOURCE/$1
       else
-        exit_error "Faltan argumentos"
+        exit_error_command_line "Faltan argumentos"
       fi
       ;;
     * )
-      exit_error "La opción $1 no existe, por favor indique una opción válida"
+      exit_error_command_line "La opción $1 no existe, por favor indique una opción válida"
       ;;
   esac
   shift
@@ -92,19 +99,28 @@ echo "Compilando ensamblador..."
 echo g++ -o $EXECUTABLE $ASSEMBLY
 if g++ -o $EXECUTABLE $ASSEMBLY; then 
   echo
-  echo "Ejecutando código ensamblador..."
-  echo $EXECUTABLE $ASSEMBLY_CODE $MEMORY $ASSEMBLY_INTERRUPTION_CODE
-  $EXECUTABLE $ASSEMBLY_CODE $MEMORY $ASSEMBLY_INTERRUPTION_CODE
-
-  echo
-  echo "Probando test bench"
-  echo iverilog -o $VERILOG_EXECUTABLE $VERILOG_WALL $VERILOG_CODE $TEST_BENCH
-  if iverilog -o $VERILOG_EXECUTABLE $VERILOG_WALL $VERILOG_CODE $TEST_BENCH; then 
-    echo vvp $VERILOG_EXECUTABLE 
-    echo
-    vvp $VERILOG_EXECUTABLE | grep -v "VCD warning: array word"
-  fi
+else 
+  exit_error "Error de compilación del ensamblador"
 fi
+
+echo "Ejecutando código ensamblador..."
+echo $EXECUTABLE $ASSEMBLY_CODE $MEMORY $ASSEMBLY_INTERRUPTION_CODES
+if $EXECUTABLE $ASSEMBLY_CODE $MEMORY $ASSEMBLY_INTERRUPTION_CODES; then
+  echo
+else 
+  exit_error "Error de ejecución del ensamblador"
+fi
+
+echo "Probando test bench"
+echo iverilog -o $VERILOG_EXECUTABLE $VERILOG_WALL $VERILOG_CODE $TEST_BENCH
+if iverilog -o $VERILOG_EXECUTABLE $VERILOG_WALL $VERILOG_CODE $TEST_BENCH; then 
+  echo vvp $VERILOG_EXECUTABLE 
+  echo
+  vvp $VERILOG_EXECUTABLE | grep -v "VCD warning: array word"
+else
+  exit_error "Error compilando iverilog"
+fi
+
 if [ $GTKWAVE == 1 ]; then
   echo
   echo "Abriendo GTKWave..."

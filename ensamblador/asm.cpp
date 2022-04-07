@@ -534,7 +534,7 @@ void ensambla(char* srcfilename, char* dstfilename, int* counter)
                 //printf("Copiando la cadena de instrucc %s de tamaño %zu sobre la cadena de contenido ->%s<-\n", instrucc, strlen(instrucc), (char *)progmem[counter]);
                 strncpy(progmem[*counter], instrucc, INSTSIZE+1);
                 //printf("Programa en dir %u es instrucc %s\n",*counter, progmem[*counter]);
-                *counter++;
+                (*counter)++;
             }
         }
         else {
@@ -558,7 +558,6 @@ void ensambla(char* srcfilename, char* dstfilename, int* counter)
 /*     for (int i = 0; i < 8; i++) {
         convBin(convertBinaryToDecimal(atoi(opcodes[25])), progmem[512 + i] + (INSTSIZE - 1) - 31, 8); // opcode de reti en decimal opcodes[24]
     } */
-    convBin(convertBinaryToDecimal(atoi(opcodes[25])), progmem[1020] + (INSTSIZE - 1) - 31, 8); // opcode de reti en decimal opcodes[24] overflow
 
 
     if ((outfile = fopen(dstfilename, "w")) == NULL) //Se abre en modo texto
@@ -574,25 +573,32 @@ void ensambla(char* srcfilename, char* dstfilename, int* counter)
             fclose(outfile);
         }
     }
-    *counter++;
 }
 
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]) {
     if (argc >= 2) {
         char *srcfilename = new char[sizeof(argv[1])+1];
         srcfilename = argv[1];
         char *dstfilename = new char[sizeof(argv[2])+1];
         dstfilename = argv[2];
         //printf("Leyendo programa principal.\n");
-        ensambla(srcfilename, dstfilename, 0);
-        if (argc == 4) {
+
+        int progfile_line[] = {0, 513, 518, 523, 528, 533, 538, 543, 548};
+        ensambla(srcfilename, dstfilename, &progfile_line[0]);
+        if (argc >= 4) {
             //printf("Leyendo programa de interrupciones.\n");
             char *srcinterruptionfilename = new char[sizeof(argv[3])+1];
             srcinterruptionfilename = argv[3];
-            int interr_address = 519;
-            for (int i = 0; i < 8; i++) {
-                ensambla(srcinterruptionfilename, dstfilename, &interr_address);
+            for (int i = 1; i < sizeof(progfile_line)/sizeof(progfile_line[0])-2; i++) {
+                ensambla(srcinterruptionfilename, dstfilename, &progfile_line[i]);
+            }
+            if (argc == 6) {
+                for (int i = 4; i < argc; i++) {
+                    srcinterruptionfilename = new char[sizeof(argv[i])+1];
+                    srcinterruptionfilename = argv[i];
+                    ensambla(srcinterruptionfilename, dstfilename, &progfile_line[i+3]);
+                }
             }
         }
     } else {
