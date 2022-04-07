@@ -501,10 +501,9 @@ int eatWhitespaceAndComments(FILE* file, int* linecount) {
     } while (1);
 }
 
-void ensambla(char* srcfilename, char* dstfilename)
+void ensambla(char* srcfilename, char* dstfilename, int* counter)
 {
     FILE *infile, *outfile;
-    int counter = 0;
     int currentline = 1;
     bool codEmitido = false;
 
@@ -515,32 +514,33 @@ void ensambla(char* srcfilename, char* dstfilename)
     }
 
     //Inicializa toda la memoria de programa a '0':
-    memset(progmem, '0', MAXPROGRAMLEN * (INSTSIZE + 1));
-    for (int i = 0; i < MAXPROGRAMLEN; i++) {
-        *((char *)progmem + i * (long long)(INSTSIZE + 1) + INSTSIZE) = '\0'; //Cada instrucción como una cadena con "0"s acabada en '\0'
+    if (!*counter) {
+        memset(progmem, '0', MAXPROGRAMLEN * (INSTSIZE + 1));
+        for (int i = 0; i < MAXPROGRAMLEN; i++) {
+            *((char *)progmem + i * (long long)(INSTSIZE + 1) + INSTSIZE) = '\0'; //Cada instrucción como una cadena con "0"s acabada en '\0'
+        }
     }
 
     //Ahora por cada línea de código
     int res;
-    int seguirflag = 1;
     do {
         if (eatWhitespaceAndComments(infile, &currentline)) { //quita espacios y comentarios previos actualizando el numero de linea
             memset(instrucc, '0', INSTSIZE); //Preparar el buffer de la instrucción todo a "0"
             instrucc[INSTSIZE] = '\0';
             codEmitido = false;
-            res = processLine(infile, &codEmitido, &currentline, counter);
+            res = processLine(infile, &codEmitido, &currentline, *counter);
             //printf("I: %s\n", instrucc);
-            if (codEmitido && (counter < MAXPROGRAMLEN)) {
+            if (codEmitido && (*counter < MAXPROGRAMLEN)) {
                 //printf("Copiando la cadena de instrucc %s de tamaño %zu sobre la cadena de contenido ->%s<-\n", instrucc, strlen(instrucc), (char *)progmem[counter]);
-                strncpy(progmem[counter], instrucc, INSTSIZE+1);
-                //printf("Programa en dir %u es instrucc %s\n",counter, progmem[counter]);
-                counter++;
+                strncpy(progmem[*counter], instrucc, INSTSIZE+1);
+                //printf("Programa en dir %u es instrucc %s\n",*counter, progmem[*counter]);
+                *counter++;
             }
         }
         else {
             break;
         }
-    } while (seguirflag);
+    } while (true);
     //Resolver los símbolos pendientes
     for (int i=0; i < numRefs; i++) {
         //buscamos el símbolo
@@ -555,9 +555,10 @@ void ensambla(char* srcfilename, char* dstfilename)
             convBin(value, progmem[tablaR[i].PosRef] + (INSTSIZE - 1) - tablaR[i].BitPos, tablaR[i].Size);
         }
     }
-    for (int i = 0; i < 8; i++)
+/*     for (int i = 0; i < 8; i++) {
         convBin(convertBinaryToDecimal(atoi(opcodes[25])), progmem[512 + i] + (INSTSIZE - 1) - 31, 8); // opcode de reti en decimal opcodes[24]
-    convBin(convertBinaryToDecimal(atoi(opcodes[25])), progmem[1020] + (INSTSIZE - 1) - 31, 8); // opcode de reti en decimal opcodes[24]
+    } */
+    convBin(convertBinaryToDecimal(atoi(opcodes[25])), progmem[1020] + (INSTSIZE - 1) - 31, 8); // opcode de reti en decimal opcodes[24] overflow
 
 
     if ((outfile = fopen(dstfilename, "w")) == NULL) //Se abre en modo texto
@@ -573,17 +574,27 @@ void ensambla(char* srcfilename, char* dstfilename)
             fclose(outfile);
         }
     }
+    *counter++;
 }
 
 
-
 int main(int argc, char* argv[]){
-    if (argc != 2) {
+    if (argc >= 2) {
         char *srcfilename = new char[sizeof(argv[1])+1];
         srcfilename = argv[1];
         char *dstfilename = new char[sizeof(argv[2])+1];
         dstfilename = argv[2];
-        ensambla(srcfilename, dstfilename);
+        //printf("Leyendo programa principal.\n");
+        ensambla(srcfilename, dstfilename, 0);
+        if (argc == 4) {
+            //printf("Leyendo programa de interrupciones.\n");
+            char *srcinterruptionfilename = new char[sizeof(argv[3])+1];
+            srcinterruptionfilename = argv[3];
+            int interr_address = 519;
+            for (int i = 0; i < 8; i++) {
+                ensambla(srcinterruptionfilename, dstfilename, &interr_address);
+            }
+        }
     } else {
         printf("Número de argumentos invalido.\n");
         return 1;

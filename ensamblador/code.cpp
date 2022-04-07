@@ -18,7 +18,8 @@ void subrutina(char modo, int *mem, int* green_leds_out, unsigned *cont) {
     green_leds_out[*cont % NUM_DEVICES] = 1;
   }
   else if (modo = 'r') {
-    
+    std::cout << "Dato " << *cont << ": " << green_leds_out[*cont % NUM_DEVICES] << "\n";
+    *cont++;
   }
 }
 

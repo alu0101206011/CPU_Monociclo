@@ -1,15 +1,22 @@
 #!/bin/bash
 
+# Para cambiarte de directorio al del script
+pushd "$(dirname ${BASH_SOURCE:0})" > /dev/null 2>&1
+trap popd > /dev/null 2>&1
+
 # Variables
-ASSEMBLY_CODE_SOURCE=./ensamblador
+ASSEMBLY_CODE_SOURCE=./ensamblador/codes
+ASSEMBLY_INTERRUPTION_CODE_SOURCE=./ensamblador/interruption_codes
+ASSEMBLY_SOURCE=./ensamblador
 VERILOG_CODE_SOURCE=./src
 EXECUTABLE_SOURCE=./bin
 MEMORY=./progfile.mem
 
-ASSEMBLY=$ASSEMBLY_CODE_SOURCE/asm.cpp
-EXECUTABLE=$ASSEMBLY_CODE_SOURCE/ensamblador.out
-EXECUTABLE_DEBUG=$ASSEMBLY_CODE_SOURCE/asm
+ASSEMBLY=$ASSEMBLY_SOURCE/asm.cpp
+EXECUTABLE=$ASSEMBLY_SOURCE/ensamblador.out
+EXECUTABLE_DEBUG=$ASSEMBLY_SOURCE/asm
 ASSEMBLY_CODE=$ASSEMBLY_CODE_SOURCE/codigo.asm
+ASSEMBLY_INTERRUPTION_CODE=$ASSEMBLY_INTERRUPTION_CODE_SOURCE/int1.asm
 VERILOG_WALL=
 VERILOG_CODE=$(ls $VERILOG_CODE_SOURCE/* | grep -v _tb.v)
 TEST_BENCH=$VERILOG_CODE_SOURCE/cpu_tb.v
@@ -37,11 +44,6 @@ usage() {
 \tComando -w o --Wall Compila verilog enseñando todos los warnings.
 \tComando -h o --help muesta esta ayuda.\n"
 }
-
-# Para cambiarte de directorio al del script
-pushd "$(dirname ${BASH_SOURCE:0})" > /dev/null 2>&1
-popd > /dev/null 2>&1
-
 
 # Usamos while para poder poner varias opciones en la linea de comandos
 
@@ -91,8 +93,8 @@ echo g++ -o $EXECUTABLE $ASSEMBLY
 if g++ -o $EXECUTABLE $ASSEMBLY; then 
   echo
   echo "Ejecutando código ensamblador..."
-  echo $EXECUTABLE $ASSEMBLY_CODE $MEMORY
-  $EXECUTABLE $ASSEMBLY_CODE $MEMORY
+  echo $EXECUTABLE $ASSEMBLY_CODE $MEMORY $ASSEMBLY_INTERRUPTION_CODE
+  $EXECUTABLE $ASSEMBLY_CODE $MEMORY $ASSEMBLY_INTERRUPTION_CODE
 
   echo
   echo "Probando test bench"
