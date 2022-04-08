@@ -4,10 +4,12 @@ module cpu_tb;
 
 
 reg clk, reset;
-wire [15:0] datos, direcciones, leds;
-reg [15:0] botones;
-wire ce;
-wire [7:0] interrupcion;
+wire [15:0] datos;
+wire [17:0] direcciones;
+wire [9:0] led_r, switches;
+reg [3:0] botones;
+wire [7:0] interrupcion, led_g;
+wire [4:0] control_mem;
 integer idx;
 
 // generación de reloj clk
@@ -20,13 +22,13 @@ begin
 end
 
 // instancia entrada salida
-e_s entada_salida(clk, reset, direcciones, botones, datos, ce, leds);
+gestor_e_s entada_salida(clk, reset, direcciones, datos, botones, switches, led_r, led_g, control_mem, interrupcion);
 
 // instancia del procesador
-cpu cpumono(clk, reset, datos, interrupcion, direcciones);
+cpu cpumono(clk, reset, datos, interrupcion, direcciones[15:0]);
 
 // timer
-timer contador(clk, reset, 8'd7, interrupcion);
+timer #(7,8) contador(clk, reset, interrupcion);
 
 initial
 begin

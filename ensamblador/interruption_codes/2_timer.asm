@@ -1,3 +1,3 @@
-li R11 3
-li R15 6
+li R11 4
+li R15 7
 reti

@@ -1,30 +1,23 @@
 `timescale 1 ns / 10 ps
-module timer (input wire clk, reset, input wire [7:0] limite, output reg[7:0] pulso);
 
-  reg [7:0] contador;
+module timer #(parameter M = 50000, WIDTH = 8) (input wire clk, reset, //2500000 = 50 ms | 250000 = 5 ms | 25000 = 500 us | 50000 = 1 ms
+                                                output wire[WIDTH-1:0] pulse);
 
-  always @(posedge clk)
-  begin
-    if (reset)
-    begin
-      contador = 8'b1;
-      pulso <= 8'b0;
-    end
-    else if (contador < limite)
-    begin
-      contador = contador + 8'b1;
-      pulso <= 8'b0;
-    end
-    else
-    begin
-      if (limite != 8'b0)
-      begin
-        pulso <= 8'b10000000;
-      end
-      else
-        pulso <= 8'b0;
-      contador = 8'b1;
-    end
-  end
+parameter N = $clog2(M);
+reg [N-1:0] count;
+wire [N-1:0] count_next;
+
+always@(posedge clk, reset)
+begin
+	if(reset)
+		count <= 0;
+	else 
+		count <= count_next;
+end
+
+//next_state
+assign count_next = (count == M-1) ? 0 : count + 1;
+//output
+assign pulse = (count == M-1) ?  2**(WIDTH-1) : 0;
 
 endmodule

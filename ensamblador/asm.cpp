@@ -584,7 +584,7 @@ int main(int argc, char* argv[]) {
         dstfilename = argv[2];
         //printf("Leyendo programa principal.\n");
 
-        int progfile_line[] = {0, 513, 518, 523, 528, 533, 538, 543, 548};
+        int progfile_line[] = {0, 513, 533, 553, 573, 593, 613, 633, 653};
         ensambla(srcfilename, dstfilename, &progfile_line[0]);
         if (argc >= 4) {
             //printf("Leyendo programa de interrupciones.\n");

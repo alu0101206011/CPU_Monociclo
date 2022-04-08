@@ -1,10 +1,10 @@
 `timescale 1 ns / 10 ps
 
 module alu #(parameter WIDTH = 16) (input wire [WIDTH-1:0] a, b,
-           input wire s_inm,
+           input wire s_inm, interrupcion,
            input wire [2:0] op_alu,
            output wire [WIDTH-1:0] y,
-           output wire carry, overflow, zero);
+           output wire carry, carry_intr, overflow, zero, zero_intr);
 
   reg [WIDTH-1:0] s; // un bit mas de carry
          
@@ -35,11 +35,12 @@ module alu #(parameter WIDTH = 16) (input wire [WIDTH-1:0] a, b,
   assign ovC2 = ((op_alu == 3'b110 | (op_alu == 3'b111 & s_inm)) & ((a[WIDTH-1] == 1'b1) & (a[WIDTH-1-1:0] == 0))) | ((op_alu == 3'b111) & !s_inm & (b[WIDTH-1] == 1'b1) & (b[WIDTH-2:0] == 0));
   assign overflow = ovSuma | ovResta | ovC2;
 
-  assign carry = (op_alu == 3'b011 & (((!s_inm) & (a < b)) | ((s_inm) & (b < a)))) | (op_alu == 3'b010 & y[WIDTH-1]);
-
+  assign carry = interrupcion ? carry : ((op_alu == 3'b011 & (((!s_inm) & (a < b)) | ((s_inm) & (b < a)))) | (op_alu == 3'b010 & y[WIDTH-1]));
+  assign carry_intr = interrupcion ? ((op_alu == 3'b011 & (((!s_inm) & (a < b)) | ((s_inm) & (b < a)))) | (op_alu == 3'b010 & y[WIDTH-1])) : carry_intr;
 
   //Calculo del flag de cero
-  assign zero = ~(|y);   //operador de reducci�n |y hace la or de los bits del vector 'y' y devuelve 1 bit resultado
+  assign zero = interrupcion ? zero : ~(|y);   //operador de reducci�n |y hace la or de los bits del vector 'y' y devuelve 1 bit resultado
+  assign zero_intr = interrupcion ? ~(|y) : zero_intr;
 
 endmodule
 
@@ -51,5 +52,5 @@ endmodule
 
 // mirar casos especificos 1000
 
-//Borrow llevado al accarreo 
+//Borrow llevado al acarreo 
 // C = (resta && (a < b)) || )(suma && s[WIDTH-1])

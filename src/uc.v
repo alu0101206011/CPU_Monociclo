@@ -43,7 +43,7 @@ module uc(input wire [7:0] opcode,
       s_calli <= min_bit_s;
       control <= INTERRUPCION_NUEVA;
     end
-    if (min_bit_s == min_bit_a)
+    else
       casex (opcode)
         8'b1xxxxxxx: // aritmetico-lógico registros
         begin

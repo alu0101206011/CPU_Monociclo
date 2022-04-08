@@ -94,3 +94,14 @@ Este es el actual diseño de conexiones de la CPU.
 | Instrucción   | OPCODE    | Descripción               |
 | :-----------: | :-------: |---------------------------|
 | **nop**       | 00010111  | Instrucción vacía         |
+
+
+## Biestables
+
+### Biestables en las interrupciones
+Necesitamos biestables que trabajen cuando estamos en una interrupción porque necesitamos mantener
+el valor de los biestables del programa de ejecución normal de la CPU por si hay una interrupción
+justo cuando vamos a decidir un salto.
+
+Además no sería bueno limitarnos los saltos en las interrupciones en si. Por esta razón nacieron
+los biestables de salto en las interrupciones.

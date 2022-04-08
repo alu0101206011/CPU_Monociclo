@@ -1,6 +1,9 @@
 `timescale 1 ns / 10 ps
 
-module pila(input wire clk, reset, push, pop, interrupt, input wire[9:0] pc_addr, output wire [9:0] out, output wire underflow, overflow);
+module pila(input wire clk, reset, push, pop, interrupt, 
+            input wire[9:0] pc_addr, 
+            output wire [9:0] out, 
+            output wire underflow, overflow);
 
   reg[9:0] mempila[0:15]; //memoria de 16 de tamaño con 10 bits de ancho
   reg[16:0] sp;  // Puede tener un bit más de control

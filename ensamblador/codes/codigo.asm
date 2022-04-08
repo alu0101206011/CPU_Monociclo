@@ -5,7 +5,7 @@ loop: SUB R1 R1 R2
       j loop
 
 otraetiqueta:
-      c2i R4 0
+      c2i R4 1
       addi R3 R2 1
       jnz main
 
