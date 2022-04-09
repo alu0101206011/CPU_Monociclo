@@ -5,12 +5,12 @@ pushd "$(dirname ${BASH_SOURCE:0})" > /dev/null 2>&1
 trap popd > /dev/null 2>&1
 
 # Variables
-ASSEMBLY_CODE_SOURCE=./ensamblador/codes
-ASSEMBLY_INTERRUPTION_CODE_SOURCE=./ensamblador/interruption_codes
-ASSEMBLY_SOURCE=./ensamblador
 VERILOG_CODE_SOURCE=./src
 EXECUTABLE_SOURCE=./bin
 MEMORY=./progfile.mem
+ASSEMBLY_SOURCE=./assembly
+ASSEMBLY_CODE_SOURCE=$ASSEMBLY_SOURCE/codes
+ASSEMBLY_INTERRUPTION_CODE_SOURCE=$ASSEMBLY_SOURCE/interruption_codes
 
 ASSEMBLY=$ASSEMBLY_SOURCE/asm.cpp
 EXECUTABLE=$ASSEMBLY_SOURCE/ensamblador.out

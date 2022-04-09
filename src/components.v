@@ -5,8 +5,8 @@
 module regfile(input  wire        clk, 
                input  wire        we3,           //se�al de habilitaci�n de escritura
                input  wire [3:0]  ra1, ra2, wa3, //direcciones de regs leidos y reg a escribir
-               input  wire [15:0]  wd3, 			 //dato a escribir
-               output wire [15:0]  rd1, rd2);     //datos leidos
+               input  wire [15:0] wd3, 			 //dato a escribir
+               output wire [15:0] rd1, rd2);     //datos leidos
 
   reg [15:0] regb[0:15]; //memoria de 16 registros de 16 bits de ancho
 
@@ -29,30 +29,17 @@ module regfile(input  wire        clk,
 endmodule
 
 //modulo sumador  
-module sum(input wire signed [9:0] a, b, output wire [9:0] y);
+module adder(input wire signed [9:0] a, b, output wire [9:0] y);
 
   assign y = a + b;
 
 endmodule
 
 //modulo registro para modelar el PC, cambia en cada flanco de subida de reloj o de reset
-module registro #(parameter WIDTH = 8)
-              (input wire             clk, reset,
-               input wire [WIDTH-1:0] d, 
-               output reg [WIDTH-1:0] q);
-
-  always @(posedge clk, posedge reset)
-    if (reset) q <= 0;
-    else       q <= d;
-
-endmodule
-
-//modulo registro para modelar el PC, cambia en cada flanco de subida de reloj o de reset
-module registro2 #(parameter WIDTH = 8)
-              (input wire             clk, reset,
-               input wire s,
-               input wire [WIDTH-1:0] d, 
-               output reg [WIDTH-1:0] q);
+module register #(parameter WIDTH = 8) (input wire clk, reset,
+                                        input wire s,
+                                        input wire [WIDTH-1:0] d, 
+                                        output reg [WIDTH-1:0] q);
 
   always @(posedge clk, posedge reset)
     if (reset)  q <= 0;
@@ -73,7 +60,7 @@ endmodule
 //modulo multiplexor, si s=1 sale d1, s=0 sale d0
 module mux4 #(parameter WIDTH = 8)
              (input  wire [WIDTH-1:0] d0, d1, d3, d4,
-              input  wire [1:0] s, 
+              input  wire [1:0]       s, 
               output wire [WIDTH-1:0] y);
 
   assign y = s == 2'b00 ? d0 : s == 2'b01 ? d1 : s == 2'b10 ? d3 : d4; 

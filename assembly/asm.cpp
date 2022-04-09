@@ -575,11 +575,10 @@ void ensambla(char* srcfilename, char* dstfilename, int* counter)
     }
 }
 
-
 int main(int argc, char* argv[]) {
     if (argc >= 2) {
         char *srcfilename = new char[sizeof(argv[1])+1];
-        srcfilename = argv[1];
+        srcfilename = argv[1];  
         char *dstfilename = new char[sizeof(argv[2])+1];
         dstfilename = argv[2];
         //printf("Leyendo programa principal.\n");
@@ -593,12 +592,10 @@ int main(int argc, char* argv[]) {
             for (int i = 1; i < sizeof(progfile_line)/sizeof(progfile_line[0])-2; i++) {
                 ensambla(srcinterruptionfilename, dstfilename, &progfile_line[i]);
             }
-            if (argc == 6) {
-                for (int i = 4; i < argc; i++) {
-                    srcinterruptionfilename = new char[sizeof(argv[i])+1];
-                    srcinterruptionfilename = argv[i];
-                    ensambla(srcinterruptionfilename, dstfilename, &progfile_line[i+3]);
-                }
+            for (int i = 4; i < argc; i++) {
+                srcinterruptionfilename = new char[sizeof(argv[i])+1];
+                srcinterruptionfilename = argv[i];
+                ensambla(srcinterruptionfilename, dstfilename, &progfile_line[i+3]);
             }
         }
     } else {
