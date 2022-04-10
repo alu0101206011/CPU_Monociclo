@@ -1,11 +1,11 @@
 `timescale 1 ns / 10 ps
 
-module dp(input wire clk, reset, s_jrel_pc, s_inm, s_stack, s_data, we3, wez, push, pop, oe,
+module dp(input wire clk, reset, s_rel, s_inm, s_stack, s_data, we3, wez, push, pop, oe,
           input wire [1:0] s_inc,
           input wire [2:0] op_alu, 
           inout wire [15:0] data_inout, 
           input [7:0] int_e, s_calli, s_reti,
-          output wire z, c, overflow, 
+          output wire z, c, overflow,
           output wire [7:0] opcode, min_bit_a, min_bit_s,
           output wire [15:0] addresses);
   
@@ -14,7 +14,7 @@ module dp(input wire clk, reset, s_jrel_pc, s_inm, s_stack, s_data, we3, wez, pu
 
   // Incremento
   register #(10) PC(clk, reset, 1'b1, out_stackMux, out_PC);
-  mux2 #(10) relMux(10'b1, instructions[9:0], s_jrel_pc, out_relMux);
+  mux2 #(10) relMux(10'b1, instructions[9:0], s_rel, out_relMux);
   adder incAdder(out_relMux, out_PC, out_pcAdder);
   mux4 #(10) incMux(out_pcAdder, instructions[9:0], interr_addr, 10'b0, s_inc, out_incMux);
 
@@ -30,9 +30,9 @@ module dp(input wire clk, reset, s_jrel_pc, s_inm, s_stack, s_data, we3, wez, pu
   // Datos
   wire zalu, zalu_intr, carry, carry_intr, aluOflow, out_ffz, out_ffc, out_ffz_intr, out_ffc_intr;
   wire[15:0] data, rd1, rd2, wd, out_ALU, out_inmMux;
-  regfile register_file(clk, we3, instructions[11:8], instructions[7:4], instructions[3:0], wd, rd1, rd2);
+  regfile register_file(clk, we3, instructions[27:24], instructions[23:20], instructions[19:16], wd, rd1, rd2);
   mux2 #(16) dataMux(out_ALU, data, s_data, wd);
-  mux2 #(16) inmMux(rd1, instructions[27:12], s_inm, out_inmMux);
+  mux2 #(16) inmMux(rd1, instructions[15:0], s_inm, out_inmMux);
   alu ALU(out_inmMux, rd2, s_inm, s_interr, op_alu, out_ALU, carry, carry_intr, aluOflow, zalu, zalu_intr);
 
   // Biestables de control
@@ -59,7 +59,7 @@ module dp(input wire clk, reset, s_jrel_pc, s_inm, s_stack, s_data, we3, wez, pu
 
   //transeiver
   transceiver tr(clk, reset, oe, rd1, data, data_inout);
-  
+  assign addresses = out_ALU;
   assign opcode = instructions[31:24];
 
 endmodule

@@ -17,19 +17,19 @@
 
 //Nemónico de cada instrucción
 
-const char* mnemonics[] = { "li", "addi", "subi", "andi", "ori", "noti", "c2i", "mov", "not", "add", "sub", "and", "or", "c2", "c2", "load", "loadr", "store", "j", "jrel", "jz", "jnz", "jne", "jcall", "jret", "reti", "nop"};
+const char* mnemonics[] = { "mov", "not", "add", "sub", "and", "or", "c2", "c2", "store", "storer", "load", "loadr", "jcall", "jret", "li", "noti", "addi", "subi", "andi", "ori", "c2i", "c2i", "j", "jrel", "jz", "jnz", "jne", "reti", "nop"};
 
 //Opcode de cada instrucción
 
-const char* opcodes[] = { "0000", "0010", "0011", "0100", "0101", "0110", "0111", "1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111", "00010000", "00010001", "00010010" , "00010011", "00010100", "00010101", "00010110", "00010111", "00011000", "00011001", "00011010", "00011111"};
+const char* opcodes[] = { "1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111", "0000", "0010", "0011", "0100", "0101", "0110", "00010000", "00010001", "00010010" , "00010011", "00010100", "00010101", "00010110", "00010111", "00011000", "00011001", "00011010", "00011011", "00011100", "00011101", "00011111"};
 
-// Operandos
+// Operandos 
 
-#define MAXNUMOPER 3      //Número máximo de operandos posibles en una instrucción
+#define MAXNUMOPER 4      //Número máximo de operandos posibles en una instrucción
 
 // Codificación de los operandos de cada instrucción (C: cte datos, D: cte de dirección de código, R: campo de registro)
-
-const char* operands[] = { "RC", "RRC", "RRC", "RRC", "RRC", "RC", "RC", "RR", "RR", "RRR", "RRR", "RRR", "RRR", "RR", "RR", "RD", "RRD", "RD", "D", "S", "D", "D", "D", "S", "", "", ""};
+// FALTAN OPES
+const char* operands[] = { "RR", "RR", "RRR", "RRR", "RRR", "RRR", "RR", "RR", "RRD", "RRCR", "RD", "RRC", "S", "", "RC", "RC", "RRC", "RRC", "RRC", "RRC", "RC", "RC", "D", "S", "S", "S", "S", "", ""};
 
 //Tamaños de operandos
 #define CONSTANTSIZE 16    //Tamaño en bits de una constante C (o dirección de datos si así se considera)
@@ -40,33 +40,35 @@ const char* operands[] = { "RC", "RRC", "RRC", "RRC", "RRC", "RC", "RC", "RR", "
 #define NUMINS (sizeof(mnemonics)/sizeof(mnemonics[0]))     //Número de instrucciones deducido de la matriz de nemónicos
 
 //Posiciones (bit más significativo) de los operandos en la instrucción (de INSTSIZE-1 a 1), 0 significa no usado (no hay operandos de sólo 1 bit)
-const int posoper[NUMINS][MAXNUMOPER] = { {3, 27, 0},
-                                          {3, 7, 27},
-                                          {3, 7, 27},
-                                          {3, 7, 27},
-                                          {3, 7, 27},
-                                          {3, 27, 0},
-                                          {3, 27, 0},
-                                          {3, 11, 0},
-                                          {3, 11, 0},
-                                          {3, 11, 7},
-                                          {3, 11, 7},
-                                          {3, 11, 7},
-                                          {3, 11, 7},
-                                          {3, 11, 0},
-                                          {3, 11, 0},
-                                          {3, 23, 0},
-                                          {3, 7, 23},
-                                          {7, 23, 0},
-                                          {9, 0, 0},
-                                          {9, 0, 0},
-                                          {9, 0, 0},
-                                          {9, 0, 0},
-                                          {9, 0, 0},
-                                          {9, 0, 0},
-                                          {0, 0, 0},
-                                          {0, 0, 0},
-                                          {0, 0, 0} };
+const int posoper[NUMINS][MAXNUMOPER] = { {19, 27, 0, 0},   // mov      RR      1000
+                                          {19, 27, 0, 0},   // not      RR      1001
+                                          {19, 27, 23, 0},  // add      RRR     1010
+                                          {19, 27, 23, 0},  // sub      RRR     1011
+                                          {19, 27, 23, 0},  // and      RRR     1100
+                                          {19, 27, 23, 0},  // or       RRR     1101
+                                          {19, 27, 0, 0},   // c2       RR      1110
+                                          {19, 27, 0, 0},   // c2       RR      1111
+                                          {19, 27, 0, 0},   // store    RRD     0000
+                                          {19, 27, 15, 23}, // storer   RRCR    0010
+                                          {19, 15, 0, 0},   // load     RD      0011
+                                          {19, 23, 15, 0},  // loadr    RRC     0100
+                                          {9, 0, 0, 0},     // jcall    S       0101
+                                          {0, 0, 0, 0},     // jret     none    0110
+                                          {19, 15, 0, 0},   // li       RC      00010000
+                                          {19, 15, 0, 0},   // noti     RC      00010001
+                                          {19, 23, 15, 0},  // addi     RRC     00010010
+                                          {19, 23, 15, 0},  // subi     RRC     00010011
+                                          {19, 23, 15, 0},  // andi     RRC     00010100
+                                          {19, 23, 15, 0},  // ori      RRC     00010101
+                                          {19, 15, 0, 0},   // c2i      RC      00010110
+                                          {19, 15, 0, 0},   // c2i      RC      00010111
+                                          {9, 0, 0, 0},     // j        D       00011000
+                                          {9, 0, 0, 0},     // jrel     S       00011001
+                                          {9, 0, 0, 0},     // jz       S       00011010
+                                          {9, 0, 0, 0},     // jnz      S       00011011
+                                          {9, 0, 0, 0},     // jne      S       00011100
+                                          {0, 0, 0, 0},     // reti     none    00011101
+                                          {0, 0, 0, 0} };   // nop      none    00011111
 
 
 //*************************************************************************************************************************************************************************
@@ -547,7 +549,7 @@ void ensambla(char* srcfilename, char* dstfilename, int* counter)
         int value = getSymbolValue(tablaR[i].Symbol);
         if (value == -1) {
             printf("Símbolo %s que aparece en la línea %u no resuelto\n", tablaR[i].Symbol, tablaR[i].LineRef);
-            continue;
+            exit(1);
         }
         if (tablaR[i].Relativo) {
             convBin(value - tablaR[i].PosRef, progmem[tablaR[i].PosRef] + (INSTSIZE - 1) - tablaR[i].BitPos, tablaR[i].Size);

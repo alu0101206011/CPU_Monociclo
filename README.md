@@ -57,43 +57,47 @@ Este es el actual diseño de conexiones de la CPU.
 ![Codificación de instrucciones aritmetico-lógicas inmediatas](./img/cod_arit_inm.png)
 | Instrucción       | OPCODE    | Descripción               |
 | :---------------: | :-------: |---------------------------|
-| **ALU (inm)**     | 1000      | Carga                     |
-| **ALU (~inm)**    | 1001      | Complemento a 1           |
-| **ALU (inm+b)**   | 1010      | Suma                      |
-| **ALU (b-inm)**   | 1011      | Resta                     |
-| **ALU (inm&b)**   | 1100      | AND                       |
-| **ALU (inm\|b)**  | 1101      | OR                        |
-| **ALU (-inm)**    | 1110      | Complemento a 2           |
-| **ALU (-inm)**    | 1111      | Complemento a 2           |
+| **ALU (inm)**     | 00010000  | Carga                     |
+| **ALU (~inm)**    | 00010001  | Complemento a 1           |
+| **ALU (inm+b)**   | 00010010  | Suma                      |
+| **ALU (b-inm)**   | 00010011  | Resta                     |
+| **ALU (inm&b)**   | 00010100  | AND                       |
+| **ALU (inm\|b)**  | 00010101  | OR                        |
+| **ALU (-inm)**    | 00010110  | Complemento a 2           |
+| **ALU (-inm)**    | 00010111  | Complemento a 2           |
 
 
 ### Memoria
 ![Codificación de la instruccion load](./img/cod_load.png)
 ![Codificación de la instruccion loadr](./img/cod_loadr.png)
 ![Codificación de la instrucción store](./img/cod_store.png)
-| Instrucción   | OPCODE    | Descripción                   |
-| :-----------: | :-------: |-------------------------------|
-| **LOAD**      | 00010000  | Carga de memoria              |
-| **LOADR**     | 00010001  | Carga de memoria por registro |
-| **STORE**     | 00010010  | Carga en memoria              |
+![Codificación de la instrucción store](./img/cod_storer.png)
+
+| Instrucción   | OPCODE    | Descripción                                                                           |
+| :-----------: | :-------: |---------------------------------------------------------------------------------------|
+| **STORE**     | 0000      | Carga en memoria                                                                      |
+| **STORER**    | 0010      | Carga en memoria relativa a registro (si el inmediato es 0 es directo por registro)   |
+| **LOAD**      | 0011      | Carga de memoria                                                                      |
+| **LOADR**     | 0011      | Carga de relativa a registro (si el inmediato es 0 es directo por registro)           |
 
 ### Saltos
 ![Codificación de instrucciones de salto absoluto](./img/cod_j.png)
 ![Codificación de instrucciones de salto relativo](./img/cod_jr.png)
 | Instrucción   | OPCODE    | Descripción               |
 | :-----------: | :-------: |---------------------------|
-| **j**         | 00010100  | Salto absoluto            |
-| **jr**        | 00010101  | Salto relativo            |
-| **jz**        | 00010110  | Salto si cero             |
-| **jnz**       | 00010110  | Salto si no cero          |
-| **jcall**     | 00010111  | Salto relativo a subrutina|
-| **jret**      | 00010111  | Retorno de subrutina      |
-| **reti**      | 00010111  | Retorno de interrupción   |
+| **j**         | 00011000  | Salto absoluto            |
+| **jr**        | 00011001  | Salto relativo            |
+| **jz**        | 00011010  | Salto relativo si cero    |
+| **jnz**       | 00011011  | Salto relativo si no cero |
+| **jne**       | 00011100  | Salto relativo si no cero |
+| **jcall**     | 0101      | Salto relativo a subrutina|
+| **jret**      | 0110      | Retorno de subrutina      |
+| **reti**      | 00011101  | Retorno de interrupción   |
 
 ### Resto de instrucciones
 | Instrucción   | OPCODE    | Descripción               |
 | :-----------: | :-------: |---------------------------|
-| **nop**       | 00010111  | Instrucción vacía         |
+| **nop**       | 00011111  | Instrucción vacía         |
 
 
 ## Biestables

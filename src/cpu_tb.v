@@ -52,7 +52,7 @@ reg signed [15:0] registers;
 
 initial
 begin
-  #(120*60);  //Esperamos 12 ciclos o 12 instrucciones
+  #(120*120);  //Esperamos 12 ciclos o 12 instrucciones
   for (idx = 0; idx < 16; idx = idx + 1)
   begin
     registers[15:0] = cpu_tb.cpumono.data_path.register_file.regb[idx];

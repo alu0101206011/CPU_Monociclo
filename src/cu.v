@@ -11,9 +11,10 @@ module cu(input wire [7:0] opcode,
   parameter NEW_INTER = 11'b00000010010;
   parameter ALU_R = 11'b00001100000;
   parameter ALU_I = 11'b01001100000;
-  parameter LOAD = 11'b01011100100;   // no probado
-  parameter LOADR = 11'b01011100100;  // no probado
-  parameter STORE = 11'b01010000100;  // no probado
+  parameter LOAD = 11'b01011000000;   // no probado
+  parameter LOADR = 11'b01011000000;  // no probado
+  parameter STORE = 11'b01000000100;  // no probado
+  parameter STORER = 11'b01000000100;  // no codificado
   parameter AB_JUMP = 11'b00000000001;
   parameter REL_JUMP = 11'b10000000000;
   parameter NOP = 11'b00000000000;
@@ -24,7 +25,7 @@ module cu(input wire [7:0] opcode,
 
   assign {s_jrel_pc, s_inm, s_stack, s_data, we3, wez, push, pop, oe, s_inc} = control;
 
-  initial 
+  initial
   begin
     s_calli = 8'b0;
     s_reti = 8'b0;
@@ -53,30 +54,34 @@ module cu(input wire [7:0] opcode,
         end
         8'b0xxxxxxx: 
         begin
-          if (opcode[6:4] != 3'b001)  // aritmetico-lógico inmediato
-          begin
-            op_alu <= opcode[6:4];
-            control <= ALU_I;
-          end
+          if (opcode[6:4] != 3'b001)
+            casex (opcode[6:4])
+              3'b000: control <= STORE;
+              3'b010: control <= STORER;
+              3'b011: control <= LOAD;
+              3'b100: control <= LOADR;
+              3'b101: control <= CALL;
+              3'b110: control <= RETURN;
+              default: control <= NOP;
+          endcase
           else
             casex (opcode)
-              8'bxxxx0000: control <= LOAD;
-              8'bxxxx0001: control <= LOADR;
-              8'bxxxx0010: control <= STORE;
-              8'bxxxx0011: control <= AB_JUMP;
-              8'bxxxx0100: control <= REL_JUMP;
-              8'bxxxx0101: control <= z ? AB_JUMP : NOP; // jz
-              8'bxxxx0110: control <= z ? NOP : AB_JUMP; // jnz
-              8'bxxxx0111: control <= c ? AB_JUMP : NOP; // jne
-              8'bxxxx1000: control <= CALL;
-              8'bxxxx1001: control <= RETURN;  
-              8'bxxxx1010: // reti interrupcion
+              8'b00010xxx:
+              begin
+                op_alu <= opcode[2:0];
+                control <= ALU_I;
+              end
+              8'b00011000: control <= AB_JUMP;
+              8'b00011001: control <= REL_JUMP;
+              8'b00011010: control <= z ? REL_JUMP : NOP;  // jz
+              8'b00011011: control <= z ? NOP : REL_JUMP;  // jnz
+              8'b00011100: control <= c ? REL_JUMP : NOP;  // jne
+              8'b00011101: // reti interrupcion
               begin
                 control <= RETURN;
                 s_reti <= min_bit_a;
                 s_calli <= 8'b0;
               end
-              8'bxxxx1111: control <= NOP;
               default: control <= NOP;
           endcase
         end

@@ -35,7 +35,7 @@ module alu #(parameter WIDTH = 16) (input wire [WIDTH-1:0] a, b,
   assign ovC2 = ((op_alu == 3'b110 | (op_alu == 3'b111 & s_inm)) & ((a[WIDTH-1] == 1'b1) & (a[WIDTH-1-1:0] == 0))) | ((op_alu == 3'b111) & !s_inm & (b[WIDTH-1] == 1'b1) & (b[WIDTH-2:0] == 0));
   assign overflow = ovAdd | ovSub | ovC2;
 
-  assign carry = interruption ? carry : ((op_alu == 3'b011 & (((!s_inm) & (a < b)) | ((s_inm) & (b < a)))) | (op_alu == 3'b010 & y[WIDTH-1]));
+  assign carry = interruption ? carry : ((op_alu == 3'b011 & (((!s_inm) & (a < b)) | ((s_inm) & (b < a)))) | (op_alu != 3'b011 & y[WIDTH-1]));
   assign carry_intr = interruption ? ((op_alu == 3'b011 & (((!s_inm) & (a < b)) | ((s_inm) & (b < a)))) | (op_alu == 3'b010 & y[WIDTH-1])) : carry_intr;
 
   //Calculo del flag de cero
