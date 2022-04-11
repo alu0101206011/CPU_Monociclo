@@ -2,11 +2,11 @@
 //Componentes varios
 
 //Banco de registros de dos salidas y una entrada
-module regfile(input  wire        clk, 
-               input  wire        we3,           //se�al de habilitaci�n de escritura
-               input  wire [3:0]  ra1, ra2, wa3, //direcciones de regs leidos y reg a escribir
-               input  wire [15:0] wd3, 			 //dato a escribir
-               output wire [15:0] rd1, rd2);     //datos leidos
+module regfile #(parameter REG_SEL = 4, WIDTH = 16) (input  wire        clk, 
+                                                     input  wire        we3,           //se�al de habilitaci�n de escritura
+                                                     input  wire [REG_SEL-1:0]  ra1, ra2, wa3, //direcciones de regs leidos y reg a escribir
+                                                     input  wire [WIDTH-1:0] wd3, 			 //dato a escribir
+                                                     output wire [WIDTH-1:0] rd1, rd2);     //datos leidos
 
   reg [15:0] regb[0:15]; //memoria de 16 registros de 16 bits de ancho
 
@@ -29,7 +29,7 @@ module regfile(input  wire        clk,
 endmodule
 
 //modulo sumador  
-module adder(input wire signed [9:0] a, b, output wire [9:0] y);
+module adder #(parameter WIDTH = 10) (input wire signed [WIDTH-1:0] a, b, output wire [WIDTH-1:0] y);
 
   assign y = a + b;
 
@@ -37,13 +37,13 @@ endmodule
 
 //modulo registro para modelar el PC, cambia en cada flanco de subida de reloj o de reset
 module register #(parameter WIDTH = 8) (input wire clk, reset,
-                                        input wire s,
+                                        input wire ce,
                                         input wire [WIDTH-1:0] d, 
                                         output reg [WIDTH-1:0] q);
 
   always @(posedge clk, posedge reset)
     if (reset)  q <= 0;
-    else if (s) q <= d;
+    else if (ce) q <= d;
 
 endmodule
 
@@ -90,7 +90,7 @@ module max_priority_bit #(parameter WIDTH = 8) (input wire [WIDTH-1:0] a, output
 
 endmodule
     
-module transceiver(input wire clk, reset, oe, input wire [15:0] in, output reg [15:0] out, inout wire [15:0] bidir);
+module transceiver #(parameter WIDTH = 16) (input wire clk, reset, oe, input wire [WIDTH-1:0] in, output reg [WIDTH-1:0] out, inout wire [WIDTH-1:0] bidir);
   always @(posedge clk, posedge reset)
   begin
     out <= bidir;

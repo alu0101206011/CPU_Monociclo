@@ -22,12 +22,12 @@ module interrupt_manager #(parameter WIDTH = 8) (input wire clk, reset,
   register #(WIDTH) Request(clk, reset, 1'b1, data_s, int_s);
   register #(WIDTH) Attention(clk, reset, 1'b1, data_a, int_a);
 
-  request_manager RM(int_e, int_s, s_reti, data_s);
-  attention_manager AM(int_a, s_calli, s_reti, data_a);
+  request_manager #(WIDTH) RM(int_e, int_s, s_reti, data_s);
+  attention_manager #(WIDTH) AM(int_a, s_calli, s_reti, data_a);
 
-  max_priority_bit selA(data_a, sel_a);
-  max_priority_bit maxS(data_s, min_bit_s);
-  max_priority_bit maxA(int_a, min_bit_a);
+  max_priority_bit #(WIDTH) selA(data_a, sel_a);
+  max_priority_bit #(WIDTH) maxS(data_s, min_bit_s);
+  max_priority_bit #(WIDTH) maxA(int_a, min_bit_a);
 
   assign s_interr = int_a > 8'b0 ? 1'b1 : 1'b0;
 
