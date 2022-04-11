@@ -10,18 +10,15 @@ module i_o_manager(input wire clk, reset, oe,
                    output reg [7:0] interruptions,
                    inout wire [15:0] data);
 
-  wire wr, wg;
+  wire wr, wg;  // FALTA POR PROBAR LOAD
 
-  wire [9:0] filter_r, lr;
-  wire [7:0] filter_g, lg;
-  assign filter_r = lr ^ data[9:0];
-  assign filter_g = lg ^ data[7:0];
+  wire [9:0] filter_r;
+  wire [7:0] filter_g;
+  assign filter_r = led_r ^ data[9:0];
+  assign filter_g = led_g ^ data[7:0];
 
-  register #(10) leds_red(clk, reset, wr, filter_r, lr);
-  register #(8) leds_green(clk, reset, wg, filter_g, lg);
-
-  assign led_r = ~lr;
-  assign led_g = ~lg;
+  register #(10) leds_red(clk, reset, wr, filter_r, led_r);
+  register #(8) leds_green(clk, reset, wg, filter_g, led_g);
 
   initial
   begin

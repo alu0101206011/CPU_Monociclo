@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}/../assembly/asm",
-            "args": ["../assembly/codes/code.asm", "../progfile.mem", "../assembly/interruption_codes/generic.asm", "../assembly/interruption_codes/simple_led_contr.asm", "../assembly/interruption_codes/simple_led_control.asm", "../assembly/interruption_codes/timer.asm" ],
+            "args": ["../assembly/codes/code.asm", "../progfile.mem", "../assembly/interruption_codes/button1.asm", "../assembly/interruption_codes/button2.asm", "../assembly/interruption_codes/button3.asm", "../assembly/interruption_codes/button4.asm", "../assembly/interruption_codes/timer.asm" ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],

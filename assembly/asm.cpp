@@ -577,31 +577,33 @@ void ensambla(char* srcfilename, char* dstfilename, int* counter)
     }
 }
 
+// srcfile = code.asm = argc[1]         destfile = progfile.mem = argc[2] 
+// argv[3], argv[4], argv[5], argv[6], argv[7]
+// button1  button2  button3   button4  timer
+
 int main(int argc, char* argv[]) {
-    if (argc >= 2) {
+    if (argc >= 2) { 
         char *srcfilename = new char[sizeof(argv[1])+1];
         srcfilename = argv[1];  
         char *dstfilename = new char[sizeof(argv[2])+1];
         dstfilename = argv[2];
         //printf("Leyendo programa principal.\n");
-
         int progfile_line[] = {0, 513, 533, 553, 573, 593, 613, 633, 653};
         ensambla(srcfilename, dstfilename, &progfile_line[0]);
-        if (argc >= 4) {
+        if (argc == 8) {
             //printf("Leyendo programa de interrupciones.\n");
-            char *srcinterruptionfilename = new char[sizeof(argv[3])+1];
-            srcinterruptionfilename = argv[3];
-            for (int i = 1; i < sizeof(progfile_line)/sizeof(progfile_line[0])-3; i++) {
-                ensambla(srcinterruptionfilename, dstfilename, &progfile_line[i]);
-            }
-            for (int i = 4; i < argc; i++) {
-                srcinterruptionfilename = new char[sizeof(argv[i])+1];
-                srcinterruptionfilename = argv[i];
-                ensambla(srcinterruptionfilename, dstfilename, &progfile_line[i+2]);
-            }
+            
+            for (int i = 1; i < sizeof(progfile_line)/sizeof(progfile_line[0])-3; i++)
+                ensambla(argv[6]/* button4 */, dstfilename, &progfile_line[i]);
+            ensambla(argv[3]/* button1 */, dstfilename, &progfile_line[6]);
+            ensambla(argv[4]/* button2 */, dstfilename, &progfile_line[7]);
+            ensambla(argv[7]/* timer */, dstfilename, &progfile_line[8]);
+        } else {
+            printf("No se han ensamblado interrupciones.\n");
+            return 1;
         }
     } else {
-        printf("Número de argumentos invalido.\n");
+        printf("Número de argumentos inválido.\n");
         return 1;
     }
     return 0;
