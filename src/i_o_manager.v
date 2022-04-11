@@ -8,14 +8,15 @@ module i_o_manager(input wire clk, reset, oe,
                    output wire [7:0] led_g,
                    output wire [4:0] control_mem, // we ce oe lb ub
                    output reg [7:0] interruptions,
-                   inout wire [15:0] data);
+                   inout wire [15:0] data_cpu,
+                   inout wire [15:0] data_mem);
 
   wire wr, wg;  // FALTA POR PROBAR LOAD
 
   wire [9:0] filter_r;
-  wire [7:0] filter_g;
-  assign filter_r = led_r ^ data[9:0];
-  assign filter_g = led_g ^ data[7:0];
+  wire [7:0] filter_g, intr;
+  assign filter_r = led_r ^ data_cpu[9:0];
+  assign filter_g = led_g ^ data_cpu[7:0];
 
   register #(10) leds_red(clk, reset, wr, filter_r, led_r);
   register #(8) leds_green(clk, reset, wg, filter_g, led_g);
@@ -37,11 +38,11 @@ module i_o_manager(input wire clk, reset, oe,
   always @(*)
   begin
     case (buttons) // presionas un botón
-      4'b0001: interruptions = 8'b01000000 | interruptions;
-      4'b0010: interruptions = 8'b00100000 | interruptions;
-      4'b0100: interruptions = 8'b00010000 | interruptions;
-      4'b1000: interruptions = 8'b00001000 | interruptions;
-      default: interruptions = 8'b00000000;
+      4'b0001: interruptions = 8'b01000000 | intr;
+      4'b0010: interruptions = 8'b00100000 | intr;
+      4'b0100: interruptions = 8'b00010000 | intr;
+      4'b1000: interruptions = 8'b00001000 | intr;
+      default: interruptions = 8'b0;
     endcase
 
     case (addr[15:0]) // para escribir en leds
@@ -50,5 +51,10 @@ module i_o_manager(input wire clk, reset, oe,
       default: control <= oe ? MEMORY_STORE : MEMORY_LOAD;
     endcase
   end
+
+  assign data_mem = oe ? data_cpu : 16'bz;
+  assign data_cpu = !oe ? data_mem : 16'bz;
+
+  assign intr = interruptions; // Para quitar warnings en el quartus
 
 endmodule

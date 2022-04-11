@@ -4,7 +4,7 @@ module cpu_tb;
 
 
 reg clk, reset;
-wire [15:0] data;
+wire [15:0] data_cpu, data_mem;
 wire [17:0] addresses;
 wire [9:0] led_r, switches;
 reg [3:0] buttons;
@@ -24,10 +24,10 @@ begin
 end
 
 // instancia entrada salida
-i_o_manager in_out(clk, reset, oe, addresses, buttons, switches, led_r, led_g, control_mem, interruptions_io, data);
+i_o_manager in_out(clk, reset, oe, addresses, buttons, switches, led_r, led_g, control_mem, interruptions_io, data_cpu, data_mem);
 
 // instancia del procesador
-cpu cpumono(clk, reset, interruptions, oe, addresses[15:0], data);
+cpu cpumono(clk, reset, interruptions, oe, addresses[15:0], data_cpu);
 
 // timer
 timer #(7,8) timer_interrupt(clk, reset, interruption_timer);
@@ -40,7 +40,6 @@ begin
   $dumpvars;
   for (idx = 0; idx < 16; idx = idx + 1) $dumpvars(0,cpu_tb.cpumono.data_path.register_file.regb[idx]);  
   for (idx = 0; idx < 16; idx = idx + 1) $dumpvars(0,cpu_tb.cpumono.data_path.Stack.stackmem[idx]);
-
 
   reset = 1;  //a partir del flanco de subida del reset empieza el funcionamiento normal
   #10;

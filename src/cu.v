@@ -3,7 +3,7 @@
 module cu(input wire [7:0] opcode, 
           input wire z, c, overflow, 
           input wire [7:0] min_bit_s, min_bit_a, 
-          output wire s_jrel_pc, s_inm, s_stack, s_data, we3, wez, push, pop, oe,
+          output wire s_rel, s_inm, s_stack, s_data, we3, wez, push, pop, oe,
           output wire [1:0] s_inc,
           output reg [2:0] op_alu, 
           output reg [7:0] s_calli, s_reti);
@@ -23,7 +23,7 @@ module cu(input wire [7:0] opcode,
 
   reg [10:0] control;
 
-  assign {s_jrel_pc, s_inm, s_stack, s_data, we3, wez, push, pop, oe, s_inc} = control;
+  assign {s_rel, s_inm, s_stack, s_data, we3, wez, push, pop, oe, s_inc} = control;
 
   initial
   begin

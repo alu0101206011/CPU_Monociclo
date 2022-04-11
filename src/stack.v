@@ -8,7 +8,7 @@ module stack(input  wire       clk, reset, push, pop, interrupt,
   reg[9:0] stackmem[0:15]; //memoria de 16 de tamaño con 10 bits de ancho
   reg[16:0] sp;  // Un bit más de control
 
-  always @(posedge clk)
+  always @(posedge clk, reset)
   begin
     if (push)
     begin
@@ -32,7 +32,7 @@ module stack(input  wire       clk, reset, push, pop, interrupt,
   end
   assign out = interrupt ? stackmem[sp] : stackmem[sp] + 10'b1;
 
-  assign underflow = reset | !((sp[16] == 1'b1) & (sp[15:0] == 16'b0)) ? 1'b0 : 1'b1;
-  assign overflow = reset | !((sp[16] == 1'b1) & (sp[15:0] == 16'b1111111111111111)) ? 1'b0 : 1'b1;
+  assign underflow = !((sp[16] == 1'b1) & (sp[15:0] == 16'b0)) ? 1'b0 : 1'b1;
+  assign overflow = !((sp[16] == 1'b1) & (sp[15:0] == 16'b1111111111111111)) ? 1'b0 : 1'b1;
 
 endmodule

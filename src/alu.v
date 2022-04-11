@@ -36,7 +36,7 @@ module alu #(parameter WIDTH = 16) (input wire [WIDTH-1:0] a, b,
   assign overflow = ovAdd | ovSub | ovC2;
 
   assign carry = interruption ? carry : ((op_alu == 3'b011 & (((!s_inm) & (a < b)) | ((s_inm) & (b < a)))) | (op_alu != 3'b011 & y[WIDTH-1]));
-  assign carry_intr = interruption ? ((op_alu == 3'b011 & (((!s_inm) & (a < b)) | ((s_inm) & (b < a)))) | (op_alu == 3'b010 & y[WIDTH-1])) : carry_intr;
+  assign carry_intr = interruption ? ((op_alu == 3'b011 & (((!s_inm) & (a < b)) | ((s_inm) & (b < a)))) | (op_alu != 3'b011 & y[WIDTH-1])) : carry_intr;
 
   //Calculo del flag de cero
   assign zero = interruption ? zero : ~(|y);   //operador de reducci�n |y hace la or de los bits del vector 'y' y devuelve 1 bit resultado
