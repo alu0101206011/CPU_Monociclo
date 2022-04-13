@@ -6,18 +6,17 @@ module cpu_environment(input wire clk, reset,
                        input wire [3:0] buttons,
                        output wire [17:0] addresses,
                        output wire [4:0] control_mem,
-                       inout wire [15:0] data_mem);
+                       inout wire [15:0] data);
 
   wire [7:0] interruption_timer, interruptions_io;
   reg [7:0] interruptions;
   wire oe;
-  inout [15:0] data_cpu;
 
   // instancia entrada salida
-  i_o_manager in_out(clk, reset, oe, addresses, buttons, switches, led_r, led_g, control_mem, interruptions_io, data_cpu, data_mem);
+  i_o_manager in_out(clk, reset, oe, addresses, buttons, switches, led_r, led_g, control_mem, interruptions_io, data);
 
   // instancia del procesador
-  cpu cpumono(clk, reset, interruptions, oe, addresses[15:0], data_cpu);
+  cpu cpumono(clk, reset, interruptions, oe, addresses[15:0], data);
 
   // timer
   timer timer_interrupt(clk, reset, interruption_timer);

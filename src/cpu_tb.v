@@ -4,7 +4,7 @@ module cpu_tb;
 
 
 reg clk, reset;
-wire [15:0] data_cpu, data_mem;
+wire [15:0] data;
 wire [17:0] addresses;
 wire [9:0] led_r, switches;
 reg [3:0] buttons;
@@ -24,10 +24,10 @@ begin
 end
 
 // instancia entrada salida
-i_o_manager in_out(clk, reset, oe, addresses, buttons, switches, led_r, led_g, control_mem, interruptions_io, data_cpu, data_mem);
+i_o_manager in_out(clk, reset, oe, addresses, buttons, switches, led_r, led_g, control_mem, interruptions_io, data);
 
 // instancia del procesador
-cpu cpumono(clk, reset, interruptions, oe, addresses[15:0], data_cpu);
+cpu cpumono(clk, reset, interruptions, oe, addresses[15:0], data);
 
 // timer
 timer #(7,8) timer_interrupt(clk, reset, interruption_timer);

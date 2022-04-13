@@ -8,25 +8,23 @@ module i_o_manager(input wire clk, reset, oe,
                    output wire [7:0] led_g,
                    output wire [4:0] control_mem, // we ce oe lb ub
                    output reg [7:0] interruptions,
-                   inout wire [15:0] data_cpu,
-                   inout wire [15:0] data_mem);
+                   inout wire [15:0] data);
 
-  wire wr, wg;  // FALTA POR PROBAR LOAD
-
+  wire wr, wg;
+  wire [15:0] data_cpu;
   wire [9:0] filter_r;
   wire [7:0] filter_g, intr;
+
+  reg le;
+  reg [6:0] control;
+  reg [15:0] data_leds;
+
   assign filter_r = led_r ^ data_cpu[9:0];
   assign filter_g = led_g ^ data_cpu[7:0];
 
   register #(10) leds_red(clk, reset, wr, filter_r, led_r);
   register #(8) leds_green(clk, reset, wg, filter_g, led_g);
 
-  initial
-  begin
-    interruptions <= 8'b0;
-  end
-
-  reg [6:0] control;
   assign {wr, wg, control_mem} = control;
 
   parameter LED_RED = 7'b10x1xxx;
@@ -35,8 +33,16 @@ module i_o_manager(input wire clk, reset, oe,
   parameter MEMORY_STORE = 7'b0000x00;
   parameter MEMORY_LOAD = 7'b0010000;
 
-  always @(*)
+  always @(posedge clk, posedge reset)
   begin
+    if (reset)
+    begin
+      interruptions <= 8'b0;
+      data_leds <= 16'b0;
+    end
+
+    le = 1'b0;
+
     case (buttons) // presionas un botón
       4'b0001: interruptions = 8'b01000000 | intr;
       4'b0010: interruptions = 8'b00100000 | intr;
@@ -46,14 +52,23 @@ module i_o_manager(input wire clk, reset, oe,
     endcase
 
     case (addr[15:0]) // para escribir en leds
-      16'b1111111111111110: control <= oe ? LED_RED : NOP;
-      16'b1111111111111111: control <= oe ? LED_GREEN : NOP;
+      16'b1111111111111110: 
+      begin
+        control <= oe ? LED_RED : NOP;
+        data_leds <= led_r;
+        le = ~oe; 
+      end
+      16'b1111111111111111: 
+      begin
+        control <= oe ? LED_GREEN : NOP;
+        data_leds <= led_g; 
+        le = ~oe; 
+      end
       default: control <= oe ? MEMORY_STORE : MEMORY_LOAD;
     endcase
   end
 
-  assign data_mem = oe ? data_cpu : 16'bz;
-  assign data_cpu = !oe ? data_mem : 16'bz;
+  transceiver transceiver2(clk, reset, le, data_leds, data_cpu, data); // parada a leer leds
 
   assign intr = interruptions; // Para quitar warnings en el quartus
 
