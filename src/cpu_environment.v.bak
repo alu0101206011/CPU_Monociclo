@@ -1,10 +1,9 @@
 `timescale 1 ns / 10 ps
 
 module cpu_environment(input wire clk, reset,
-                       input wire [9:0] switches,
+                       input wire [9:0] led_r, switches,
+                       input wire [7:0] led_g,
                        input wire [3:0] buttons,
-							  output wire [9:0] led_r,
-							  output wire [7:0] led_g,
                        output wire [17:0] addresses,
                        output wire [4:0] control_mem,
                        inout wire [15:0] data);
@@ -22,7 +21,7 @@ module cpu_environment(input wire clk, reset,
   // timer
   timer timer_interrupt(clk, reset, interruption_timer);
 
-  always @(posedge clk, posedge reset)
+  always @(posedge clk, reset)
     if (reset)
       interruptions = 8'b0;
     else

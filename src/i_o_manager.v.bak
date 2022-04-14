@@ -44,11 +44,11 @@ module i_o_manager(input wire clk, reset, oe,
     le = 1'b0;
 
     case (buttons) // presionas un botón
-      4'b0001: interruptions <= 8'b01000000 | intr;
-      4'b0010: interruptions <= 8'b00100000 | intr;
-      4'b0100: interruptions <= 8'b00010000 | intr;
-      4'b1000: interruptions <= 8'b00001000 | intr;
-      default: interruptions <= 8'b0;
+      4'b0001: interruptions = 8'b01000000 | intr;
+      4'b0010: interruptions = 8'b00100000 | intr;
+      4'b0100: interruptions = 8'b00010000 | intr;
+      4'b1000: interruptions = 8'b00001000 | intr;
+      default: interruptions = 8'b0;
     endcase
 
     case (addr[15:0]) // para escribir en leds

@@ -12,7 +12,7 @@ module regfile #(parameter REG_SEL = 4, WIDTH = 16) (input  wire        clk,
 
   initial
   begin
-    $readmemb("./src/regfile.dat",regb); // inicializa los registros a valores conocidos
+    $readmemb("regfile.dat",regb); // inicializa los registros a valores conocidos
   end  
   
   // El registro 0 siempre es cero
@@ -22,8 +22,8 @@ module regfile #(parameter REG_SEL = 4, WIDTH = 16) (input  wire        clk,
   always @(posedge clk)
     if (we3) regb[wa3] <= wd3;	
   
-  assign rd1 = (ra1 != 0) ? regb[ra1] : 16'b0;
-  assign rd2 = (ra2 != 0) ? regb[ra2] : 16'b0;
+  assign rd1 = (ra1 != 0) ? regb[ra1] : 0;
+  assign rd2 = (ra2 != 0) ? regb[ra2] : 0;
 
 
 endmodule
@@ -93,10 +93,7 @@ endmodule
 module transceiver #(parameter WIDTH = 16) (input wire clk, reset, oe, input wire [WIDTH-1:0] in, output reg [WIDTH-1:0] out, inout wire [WIDTH-1:0] bidir);
   always @(posedge clk, posedge reset)
   begin
-    if (reset)
-		out <= 16'b0;
-    else
-		out <= bidir;
+    out <= bidir;
   end
   assign bidir = oe ? in : 16'bz;
 endmodule

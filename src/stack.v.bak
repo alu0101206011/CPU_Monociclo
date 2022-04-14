@@ -11,7 +11,7 @@ module stack(input  wire       clk, reset, push, pop, interrupt,
   always @(posedge clk, posedge reset)
   begin
 	 if (reset)
-      sp <= 5'b0;
+      sp <= 16'b0;
     else if (push)
     begin
       if (sp[3:0] == 4'b1111)
