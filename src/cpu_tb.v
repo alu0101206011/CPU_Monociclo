@@ -47,7 +47,7 @@ begin
 
   #30
   buttons = 16'b1;
-  #70
+  #200
   buttons = 16'b0;
 
   #200

@@ -595,8 +595,8 @@ int main(int argc, char* argv[]) {
             
             for (int i = 1; i < sizeof(progfile_line)/sizeof(progfile_line[0])-3; i++)
                 ensambla(argv[6]/* button4 */, dstfilename, &progfile_line[i]);
-            ensambla(argv[3]/* button1 */, dstfilename, &progfile_line[6]);
-            ensambla(argv[4]/* button2 */, dstfilename, &progfile_line[7]);
+            ensambla(argv[3]/* button1 */, dstfilename, &progfile_line[7]);
+            ensambla(argv[4]/* button2 */, dstfilename, &progfile_line[6]);
             ensambla(argv[7]/* timer */, dstfilename, &progfile_line[8]);
         } else {
             printf("No se han ensamblado interrupciones.\n");
