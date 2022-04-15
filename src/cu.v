@@ -25,18 +25,18 @@ module cu(input wire [7:0] opcode,
 
   assign {s_rel, s_inm, s_stack, s_data, we3, wez, push, pop, oe, s_inc} = control;
 
-  initial
+/*   initial
   begin
     s_calli = 8'b0;
     s_reti = 8'b0;
-  end
+  end */
 
   always @(opcode, min_bit_a) 
   begin
     if (overflow)
     begin
       s_reti <= 8'b0;
-      s_calli <= 8'b00000001;
+      s_calli <= 8'b1;
       op_alu <= 3'b0;
       control <= NEW_INTER;
     end

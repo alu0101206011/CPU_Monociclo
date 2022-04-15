@@ -1,3 +1,3 @@
-li R7 1
+li R14 1
 store R7, 0xFFFE
 reti

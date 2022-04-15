@@ -20,7 +20,7 @@ module cpu_environment(input wire clk, reset,
   cpu cpumono(clk, reset, interruptions, oe, addresses[15:0], data);
 
   // timer
-  timer timer_interrupt(clk, reset, interruption_timer);
+  //timer timer_interrupt(clk, reset, interruption_timer);
 
   always @(posedge clk, posedge reset)
     if (reset)
