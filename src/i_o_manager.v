@@ -33,7 +33,7 @@ module i_o_manager(input wire clk, reset, oe,
   parameter MEMORY_STORE = 7'b0000x00;
   parameter MEMORY_LOAD = 7'b0010000;
 
-  always @(posedge reset, posedge addr)
+  always @(*)
   begin
     if (reset)
     begin
@@ -48,7 +48,7 @@ module i_o_manager(input wire clk, reset, oe,
 		begin
 		  control <= NOP;
 		  data_io <= buttons;
-
+      le = 1'b1;
 		end
       16'b1111111111111110: 
       begin

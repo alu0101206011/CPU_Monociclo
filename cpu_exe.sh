@@ -7,7 +7,7 @@ trap popd > /dev/null 2>&1
 # Variables
 VERILOG_CODE_SOURCE=./src
 EXECUTABLE_SOURCE=./bin
-MEMORY=./src/progfile.mem
+MEMORY=./progfile.mem
 ASSEMBLY_SOURCE=./assembly
 ASSEMBLY_CODE_SOURCE=$ASSEMBLY_SOURCE/codes
 ASSEMBLY_INTERRUPTION_CODE_SOURCE=$ASSEMBLY_SOURCE/interruption_codes

@@ -548,7 +548,8 @@ void ensambla(char* srcfilename, char* dstfilename, int* counter)
         //buscamos el símbolo
         int value = getSymbolValue(tablaR[i].Symbol);
         if (value == -1) {
-            printf("Símbolo %s que aparece en la línea %u no resuelto\n", tablaR[i].Symbol, tablaR[i].LineRef);
+            printf("No ha sido resuelto el símbolo %s\n", tablaR[i].Symbol);
+            printf("Línea %u\n", tablaR[i].LineRef);
             exit(1);
         }
         if (tablaR[i].Relativo) {
@@ -557,13 +558,8 @@ void ensambla(char* srcfilename, char* dstfilename, int* counter)
             convBin(value, progmem[tablaR[i].PosRef] + (INSTSIZE - 1) - tablaR[i].BitPos, tablaR[i].Size);
         }
     }
-/*     for (int i = 0; i < 8; i++) {
-        convBin(convertBinaryToDecimal(atoi(opcodes[25])), progmem[512 + i] + (INSTSIZE - 1) - 31, 8); // opcode de reti en decimal opcodes[24]
-    } */
 
-
-    if ((outfile = fopen(dstfilename, "w")) == NULL) //Se abre en modo texto
-    {
+    if ((outfile = fopen(dstfilename, "w")) == NULL) { //Se abre en modo texto
         printf("ERROR: dest file open failed\n");
         exit(1);
     }
