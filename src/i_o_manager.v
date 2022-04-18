@@ -17,7 +17,7 @@ module i_o_manager(input wire clk, reset, oe,
 
   reg le;
   reg [6:0] control;
-  reg [15:0] data_leds;
+  reg [15:0] data_io;
 
   assign filter_r = led_r ^ data_cpu[9:0];
   assign filter_g = led_g ^ data_cpu[7:0];
@@ -33,42 +33,40 @@ module i_o_manager(input wire clk, reset, oe,
   parameter MEMORY_STORE = 7'b0000x00;
   parameter MEMORY_LOAD = 7'b0010000;
 
-  always @(posedge clk, posedge reset)
+  always @(posedge reset, posedge addr)
   begin
     if (reset)
     begin
       interruptions <= 8'b0;
-      data_leds <= 16'b0;
+      data_io <= 16'b0;
     end
 
     le = 1'b0;
 
-    case (buttons) // presionas un botón
-      4'b0001: interruptions <= 8'b01000000 | intr;
-      4'b0010: interruptions <= 8'b00100000 | intr;
-      4'b0100: interruptions <= 8'b00010000 | intr;
-      4'b1000: interruptions <= 8'b00001000 | intr;
-      default: interruptions <= 8'b0;
-    endcase
-
     case (addr[15:0]) // para escribir en leds
+		16'b1111111111111101:
+		begin
+		  control <= NOP;
+		  data_io <= buttons;
+
+		end
       16'b1111111111111110: 
       begin
         control <= oe ? LED_RED : NOP;
-        data_leds <= led_r;
+        data_io <= led_r;
         le = ~oe; 
       end
       16'b1111111111111111: 
       begin
         control <= oe ? LED_GREEN : NOP;
-        data_leds <= led_g; 
+        data_io <= led_g; 
         le = ~oe; 
       end
       default: control <= oe ? MEMORY_STORE : MEMORY_LOAD;
     endcase
   end
 
-  transceiver transceiver2(clk, reset, le, data_leds, data_cpu, data); // parada a leer leds
+  transceiver transceiver2(le, data_io, data_cpu, data); // parada a leer leds
 
   assign intr = interruptions; // Para quitar warnings en el quartus
 

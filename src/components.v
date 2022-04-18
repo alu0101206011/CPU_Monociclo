@@ -12,7 +12,7 @@ module regfile #(parameter REG_SEL = 4, WIDTH = 16) (input  wire        clk,
 
   initial
   begin
-    $readmemb("./src/regfile.dat",regb); // inicializa los registros a valores conocidos
+    $readmemb(/* "C:/Users/alu01/Desktop/cuatri/DDP/CPU_Monociclo/src/ */"regfile.dat",regb); // inicializa los registros a valores conocidos
   end  
   
   // El registro 0 siempre es cero
@@ -90,13 +90,7 @@ module max_priority_bit #(parameter WIDTH = 8) (input wire [WIDTH-1:0] a, output
 
 endmodule
     
-module transceiver #(parameter WIDTH = 16) (input wire clk, reset, oe, input wire [WIDTH-1:0] in, output reg [WIDTH-1:0] out, inout wire [WIDTH-1:0] bidir);
-  always @(posedge clk, posedge reset)
-  begin
-    if (reset)
-		out <= 16'b0;
-    else
-		out <= bidir;
-  end
+module transceiver #(parameter WIDTH = 16) (input wire oe, input wire [WIDTH-1:0] in, output wire [WIDTH-1:0] out, inout wire [WIDTH-1:0] bidir);
+	assign out = bidir;
   assign bidir = oe ? in : 16'bz;
 endmodule

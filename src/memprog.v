@@ -9,7 +9,7 @@ module memprog(input  wire        clk,
 
   initial
   begin
-    $readmemb("./src/progfile.mem",mem); // inicializa la memoria del fichero en texto binario
+    $readmemb(/* "C:/Users/alu01/Desktop/cuatri/DDP/CPU_Monociclo/src/ */"progfile.mem",mem); // inicializa la memoria del fichero en texto binario
   end
   
   assign rd = mem[a];

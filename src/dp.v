@@ -58,7 +58,7 @@ module dp(input wire clk, reset, s_rel, s_inm, s_stack, s_data, we3, wez, push, 
   interrupt_manager #(8) IM(clk, reset, int_e, s_calli, s_reti, s_interr, min_bit_s, min_bit_a, interr_addr);
 
   //transeiver
-  transceiver tr(clk, reset, oe, rd1, data, data_inout);
+  transceiver tr(oe, rd1, data, data_inout);
   assign addresses = out_ALU;
   assign opcode = instructions[31:24];
 
