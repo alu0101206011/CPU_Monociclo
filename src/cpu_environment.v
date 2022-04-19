@@ -9,24 +9,18 @@ module cpu_environment(input wire clk, reset,
                        output wire [4:0] control_mem,
                        inout wire [15:0] data);
 
-  wire [7:0] interruption_timer, interruptions_io;
-  reg [7:0] interruptions;
+  wire [7:0] interruptions;
   wire oe;
 
   // instancia entrada salida
-  i_o_manager in_out(clk, reset, oe, addresses, buttons, switches, led_r, led_g, control_mem, interruptions_io, data);
+  i_o_manager in_out(clk, reset, oe, addresses, buttons, switches, led_r, led_g, control_mem, data);
 
   // instancia del procesador
   cpu cpumono(clk, reset, interruptions, oe, addresses[15:0], data);
 
   // timer
-  //timer timer_interrupt(clk, reset, interruption_timer);
+  //timer timer_interrupt(clk, reset, interruptions);
 
-  always @(posedge clk, posedge reset)
-    if (reset)
-      interruptions = 8'b0;
-    else
-      interruptions = interruption_timer | interruptions_io;
 
 endmodule
 // quartus placa 484c7

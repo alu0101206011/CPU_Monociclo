@@ -8,6 +8,7 @@ trap popd > /dev/null 2>&1
 VERILOG_CODE_SOURCE=./src
 EXECUTABLE_SOURCE=./bin
 MEMORY=./progfile.mem
+REGISTER=./regfile.dat
 ASSEMBLY_SOURCE=./assembly
 ASSEMBLY_CODE_SOURCE=$ASSEMBLY_SOURCE/codes
 ASSEMBLY_INTERRUPTION_CODE_SOURCE=$ASSEMBLY_SOURCE/interruption_codes
@@ -24,6 +25,7 @@ VERILOG_EXECUTABLE=$EXECUTABLE_SOURCE/cpu
 GTKWAVE=0
 GTKWAVE_EXECUTABLE=$EXECUTABLE_SOURCE/cpu_tb.vcd
 DEBUG_ON=0
+QUARTUS=0
 
 # Funciones
 
@@ -88,6 +90,9 @@ while [ "$1" != "" ]; do
         exit_error_command_line "Faltan argumentos"
       fi
       ;;
+    -q | --quartus )
+      QUARTUS=1
+      ;;
     * )
       exit_error_command_line "La opción $1 no existe, por favor indique una opción válida"
       ;;
@@ -122,8 +127,19 @@ else
 fi
 
 if [ $GTKWAVE == 1 ]; then
+  #./mnt/c/Program\ Files/VcXsrv/xlaunch.exe
+  export DISPLAY=:0
   echo
   echo "Abriendo GTKWave..."
   echo gtkwave $GTKWAVE_EXECUTABLE
   gtkwave $GTKWAVE_EXECUTABLE
+fi
+
+if [ $QUARTUS == 1 ]; then
+  echo
+  echo "Preparando para Quartus II"
+  echo cp $MEMORY $VERILOG_CODE_SOURCE
+  cp $MEMORY $VERILOG_CODE_SOURCE
+  echo cp $REGISTER $VERILOG_CODE_SOURCE
+  cp $REGISTER $VERILOG_CODE_SOURCE
 fi

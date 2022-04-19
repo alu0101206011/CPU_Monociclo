@@ -7,23 +7,17 @@ module i_o_manager(input wire clk, reset, oe,
                    output wire [9:0] led_r,
                    output wire [7:0] led_g,
                    output wire [4:0] control_mem, // we ce oe lb ub
-                   output reg [7:0] interruptions,
                    inout wire [15:0] data);
 
   wire wr, wg;
   wire [15:0] data_cpu;
-  wire [9:0] filter_r;
-  wire [7:0] filter_g, intr;
 
   reg le;
   reg [6:0] control;
   reg [15:0] data_io;
 
-  assign filter_r = led_r ^ data_cpu[9:0];
-  assign filter_g = led_g ^ data_cpu[7:0];
-
-  register #(10) leds_red(clk, reset, wr, filter_r, led_r);
-  register #(8) leds_green(clk, reset, wg, filter_g, led_g);
+  register #(10) leds_red(clk, reset, wr, data_cpu[9:0], led_r);
+  register #(8) leds_green(clk, reset, wg, data_cpu[7:0], led_g);
 
   assign {wr, wg, control_mem} = control;
 
@@ -36,10 +30,7 @@ module i_o_manager(input wire clk, reset, oe,
   always @(*)
   begin
     if (reset)
-    begin
-      interruptions <= 8'b0;
       data_io <= 16'b0;
-    end
 
     le = 1'b0;
 
@@ -67,7 +58,5 @@ module i_o_manager(input wire clk, reset, oe,
   end
 
   transceiver transceiver2(le, data_io, data_cpu, data); // parada a leer leds
-
-  assign intr = interruptions; // Para quitar warnings en el quartus
 
 endmodule
