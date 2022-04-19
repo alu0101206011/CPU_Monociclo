@@ -24,7 +24,7 @@ begin
 end
 
 // instancia entrada salida
-i_o_manager in_out(clk, reset, oe, addresses, buttons, switches, led_r, led_g, control_mem, interruptions_io, data);
+i_o_manager in_out(clk, reset, oe, addresses, buttons, switches, led_r, led_g, control_mem, data);
 
 // instancia del procesador
 cpu cpumono(clk, reset, interruptions, oe, addresses[15:0], data);

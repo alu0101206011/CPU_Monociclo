@@ -1,6 +1,6 @@
 jcall pepe
 li r7 -32768
-subi r3 r7 1
+subi r3 r7 0
 c2i r4 1
 c2 r5 r7
 jne end2

@@ -38,7 +38,7 @@ module i_o_manager(input wire clk, reset, oe,
 		16'b1111111111111101:
 		begin
 		  control <= NOP;
-		  data_io <= buttons;
+		  data_io <= {12'b0, ~buttons};
       le = 1'b1;
 		end
       16'b1111111111111110: 

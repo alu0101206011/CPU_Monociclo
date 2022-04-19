@@ -19,7 +19,7 @@ module cpu_environment(input wire clk, reset,
   cpu cpumono(clk, reset, interruptions, oe, addresses[15:0], data);
 
   // timer
-  //timer timer_interrupt(clk, reset, interruptions);
+  timer #(7,8) timer_interrupt(clk, reset, interruptions);
 
 
 endmodule

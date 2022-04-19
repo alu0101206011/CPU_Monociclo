@@ -71,6 +71,12 @@ const int posoper[NUMINS][MAXNUMOPER] = { {19, 27, 0},      // mov      RR      
                                           {0, 0, 0} };      // nop      none    00011111
 
 
+const char* complex_mnemonics[] = {"beq", "bne", "blt", "ble", "bgt", "bge"};
+
+#define NUMCOMINS (sizeof(complex_mnemonics)/sizeof(complex_mnemonics[0]))     //Número de instrucciones deducido de la matriz de nemónicos
+
+const char* complex_operands[] = {"RRS", "RRS", "RRS", "RRS", "RRS", "RRS"};
+
 //*************************************************************************************************************************************************************************
 // Normalmente no sería necesario tocar el código de más abajo para adaptar a un ensamblador nuevo, salvo modificaciones en codificación de parámetros como salto relativo
 //*************************************************************************************************************************************************************************
@@ -96,10 +102,12 @@ struct SymbRef {
     int  BitPos;
     int  Size;
     int  Relativo;
+    int Complex;
 };
 struct SymbRef tablaR[MAXSYMBREFS];
 int numRefs = 0;
 int sal_rel = 0;
+int complex = 0;
 
 //Tabla de símbolos
 #define MAXSYMBOLS 1000
@@ -133,7 +141,7 @@ int operNumBits(int idopcode, int idxOper) {
 }
 
 
-// Pasamos de texto a binario (?)
+// Pasamos de texto a binario
 void convBin(unsigned int number, char* destStr, size_t numchars) {
     unsigned int numero = number;
     for (int i = 0; i < numchars; i++) {
@@ -147,25 +155,7 @@ void convBin(unsigned int number, char* destStr, size_t numchars) {
     }
 }
 
-int pow(int n, int p) {
-    int acc = 1;
-    for (int i = 0; i < p; i++)
-        acc *= n;
-    return acc;
-}
-
-int convertBinaryToDecimal(int n) {
-    int decimalNumber = 0, i = 0, remainder;
-    while (n != 0) {
-        remainder = n % 10;
-        n /= 10;
-        decimalNumber += remainder*pow(2,i);
-        ++i;
-    }
-    return decimalNumber;
-}
-
-// Encuentra strings con nelementos contados (?)
+// Encuentra strings en la lista dada
 int findStr(const char* str, const char** liststr, int nelem) {
     int i;
     for (i = 0; i < nelem; i++) {
@@ -185,6 +175,7 @@ void addSymbRef(const char* sym, int line, int pos, int bitpos, int numbits) {
         tablaR[numRefs].BitPos = bitpos;
         tablaR[numRefs].Size = numbits;
         tablaR[numRefs].Relativo = sal_rel;
+        tablaR[numRefs].Complex = complex;
         //printf("Insert. ref. a símbolo: '%s' ocurrida en la línea fuente %u (instrucción en dir %u) en idx %u de tabla de referencias\n", sym, line, pos, numRefs);
         numRefs++;
     }
@@ -260,29 +251,219 @@ int eatComment(FILE* file) {
 }
 
 
-void processMnemonic(FILE* file, char* line, int numread, bool *code, int srcline, int counter) {
+void processMnemonic(FILE* file, char* line, int numread, bool *code, int srcline, int *counter) {
     int id = findStr(line, mnemonics, NUMINS);
-    if (id == -1) { //No es nemónico, posible pseudoint o error
-        *code = false;
-        if ((strncmp("equ", line, numread) == 0) || (strncmp("EQU", line, numread) == 0)) { //Caso 'equ' (única pseudo ins por el momento)
-            int cte, num;
-            num = fscanf(file, " %i", &cte);
-            if (num == 1) {
-                int idx = getSymbolIdx(srcline);
-                if (idx < 0) {
-                    printf("No hay símbolo definido para el 'equ' en la línea: %u\n", srcline);
+    if (id == -1) { // No es nemónico, posible pseudoint o error
+        id = findStr(line, complex_mnemonics, NUMCOMINS); // Mira si es un nemonico complejo
+        if (id == -1) {
+            *code = false;
+            if ((strncmp("equ", line, numread) == 0) || (strncmp("EQU", line, numread) == 0)) { //Caso 'equ' (única pseudo ins por el momento)
+                int cte, num;
+                num = fscanf(file, " %i", &cte);
+                if (num == 1) {
+                    int idx = getSymbolIdx(srcline);
+                    if (idx < 0) {
+                        printf("No hay símbolo definido para el 'equ' en la línea: %u\n", srcline);
+                    }
+                    else {
+                        setSymbolValue(idx, cte);
+                    }
                 }
                 else {
-                    setSymbolValue(idx, cte);
+                    printf("Operando incorrecto para el 'equ' en la línea: %u\n", srcline);
                 }
             }
             else {
-                printf("Operando incorrecto para el 'equ' en la línea: %u\n", srcline);
+                printf("Nemónico no reconocido en la línea: %u\n", srcline);
+            }
+        } else { // Es nemonico complejo
+            for (int instrucciones = 0; instrucciones < 3; instrucciones++) { // desglosamos nemonico en nemonicos normales
+                *code = true; //Se va a emitir código
+                //Lo guardamos en la linea de código máquina actual instrucc
+                int id_sub = findStr("sub", mnemonics, NUMINS);
+                int id_jz = findStr("jz", mnemonics, NUMINS);
+                int id_jnz = findStr("jnz", mnemonics, NUMINS);
+                int id_jne = findStr("jne", mnemonics, NUMINS);
+                long int current_posfile; // Guargamos posicion del fichero de entrada
+                bool register_invert = false;
+                int new_id = 0;
+
+                memset(instrucc, '0', INSTSIZE); //Preparar el buffer de la instrucción todo a "0"
+                instrucc[INSTSIZE] = '\0';
+
+                if (complex_mnemonics[id] == "beq") { // necesitamos guardar en la instrucc el opcode en cuestion
+                    complex = 1;
+                    if (instrucciones == 0) {
+                        memcpy(instrucc, opcodes[id_sub], strlen(opcodes[id_sub])); // opcode sub R1 R2
+                        new_id = id_sub;
+                    } else if (instrucciones == 1) {
+                        memcpy(instrucc, opcodes[id_jz], strlen(opcodes[id_jz])); // opcode jz
+                        new_id = id_jz;
+                    } else { 
+                        break;
+                    }
+                } else if (complex_mnemonics[id] == "bne") {
+                    complex = 1;
+                    if (instrucciones == 0) {
+                        memcpy(instrucc, opcodes[id_sub], strlen(opcodes[id_sub])); // opcode sub R1 R2
+                        new_id = id_sub;
+                    } else if (instrucciones == 1) {
+                        memcpy(instrucc, opcodes[id_jnz], strlen(opcodes[id_jnz])); // opcode jnz
+                        new_id = id_jnz;
+                    } else { 
+                        break;
+                    }
+                    
+                } else if (complex_mnemonics[id] == "blt") {
+                    complex = 1;
+                    if (instrucciones == 0) {
+                        memcpy(instrucc, opcodes[id_sub], strlen(opcodes[id_sub])); // opcode sub R1 R2
+                        new_id = id_sub;
+                    } else if (instrucciones == 1) {
+                        memcpy(instrucc, opcodes[id_jne], strlen(opcodes[id_jne])); // opcode jne
+                        new_id = id_jne;
+                    } else { 
+                        break;
+                    }
+                } else if (complex_mnemonics[id] == "ble") { 
+                    complex = 2;
+                    if (instrucciones == 0) {
+                        memcpy(instrucc, opcodes[id_sub], strlen(opcodes[id_sub])); // opcode sub R1 R2
+                        new_id = id_sub;
+                    } else if (instrucciones == 1) {
+                        memcpy(instrucc, opcodes[id_jne], strlen(opcodes[id_jne])); // opcode jne
+                        current_posfile = ftell(file);
+                        new_id = id_jne;
+                    } else if (instrucciones == 2) {
+                        memcpy(instrucc, opcodes[id_jz], strlen(opcodes[id_jz])); // opcode jz
+                        fseek(file, current_posfile, SEEK_SET);
+                        new_id = id_jz;
+                    } else { 
+                        break;
+                    }
+                } else if (complex_mnemonics[id] == "bgt") {
+                    complex = 1;
+                    if (instrucciones == 0) {
+                        memcpy(instrucc, opcodes[id_sub], strlen(opcodes[id_sub])); // opcode sub R2 R1
+                        register_invert = true;
+                        new_id = id_sub;
+                    } else if (instrucciones == 1) {
+                        memcpy(instrucc, opcodes[id_jne], strlen(opcodes[id_jne])); // opcode jne
+                        current_posfile = ftell(file);
+                        new_id = id_jne;
+                    } else { 
+                        break;
+                    }
+                } else { // bge
+                    if (instrucciones == 0) {
+                        complex = 2;
+                        memcpy(instrucc, opcodes[id_sub], strlen(opcodes[id_sub])); // opcode sub R2 R1
+                        register_invert = true;
+                        new_id = id_sub;
+                    } else if (instrucciones == 1) {
+                        memcpy(instrucc, opcodes[id_jne], strlen(opcodes[id_jne])); // opcode jne
+                        current_posfile = ftell(file);
+                        new_id = id_jne;
+                    } else if (instrucciones == 2) {
+                        memcpy(instrucc, opcodes[id_jz], strlen(opcodes[id_jz])); // opcode jz
+                        fseek(file, current_posfile, SEEK_SET);
+                        new_id = id_jz;
+                    } else { 
+                        break;
+                    }
+                }
+                //Veamos el número de operandos esperado
+                size_t numoper = strlen(operands[new_id]);
+                if (numoper == 0) { //se acabó de momento
+                    return;
+                } 
+                //Procesamos operandos
+                long int posfile = ftell(file); // Guargamos posicion del fichero de entrada
+                char fmtStr[MAXLINE + 1] = ""; //Cadena de formato scanf de operandos
+                char fmtStrSym[MAXLINE + 1] = ""; //Igual para operandos con símbolos
+                int num; //Valor devuelto pos scanf como numero de operandos reconocidos
+                int ops[MAXNUMOPER] = { 0, 0, 0 }; //Operandos posibles, máximo tres operandos reales de los cuales solo uno puede ser un simbolo que se resolverá o no ahora 
+                char simb[MAXSYMBOLLEN + 1] = ""; //símbolo
+                strcat(fmtStr, " "); //Permitimos ws iniciales
+                strcat(fmtStrSym, " "); //Permitimos ws iniciales
+                for (int i = 0; i < numoper; i++) { //Procesamos cada tipo de operando​
+                    switch (operands[new_id][i]) { 
+                    case 'R':
+                        if (i != 0) {  // el registro destino es 0
+                            strcat(fmtStr, "%*[Rr]%2u"); //Registros, intentar leer dos caracteres de num. registro máximo
+                            if (i != (numoper - 1)) strcat(fmtStr, " , "); //Si no somos el último operando, consumir ws y coma enmedio
+                            num = fscanf(file, fmtStr, &(ops[i]));
+                            if (num != 1) {
+                                //printf("Error buscando operando %d tipo registro con formato R en línea %d\n", i + 1, srcline);
+                            } 
+                        } else {
+                            num = 1;
+                        }
+                        break;
+                    case 'S':
+                        sal_rel = 1;
+                    case 'C':
+                    case 'D':
+                        //Podría ser simbólico, intentamos primero con ctes
+                        posfile = ftell(file); //guardar posición del fichero de entrada
+                        strcat(fmtStr, "%i"); //Permite leer en hex, octal o decimal con notación del C,valores negativos en decimal (se codificarán en complemento a 2)
+                        if (i != (numoper - 1)) strcat(fmtStr, " , "); //Si no somos el último operando, consumir ws y coma enmedio
+                        num = fscanf(file, fmtStr, &(ops[i]));
+                        if (num != 1) { //No se pudo leer bien el operando
+                            fseek(file, posfile, SEEK_SET); //restauramos pos en fichero
+                            strcat(fmtStrSym, "%[^ ,\r\n\t]"); //Leer símbolo como cadena a ver 
+                            if (i != (numoper - 1)) strcat(fmtStrSym, "%*[ ,\t]"); //si no somos ultimo operando quita espacios, tabs y coma siguientes
+                            num = fscanf(file, fmtStrSym, simb);
+                            if (num == 1) { //Ha habido suerte, ahora recuperar el valor del símbolo
+                                int val = getSymbolValue(simb);
+                                if (val != -1) { //Encontrado
+                                    if (sal_rel) ops[i] = val - *counter;
+                                    else ops[i] = val;
+                                }
+                                else { //No encontrado, meter en tabla de referencias para resolverlas al final
+                                    addSymbRef(simb, srcline, *counter, posoper[new_id][i], operNumBits(new_id, i));
+                                }
+                            }
+                            else {
+                                printf("Error buscando operando %d cte con formato '%s' en la línea %d\n", i + 1, fmtStrSym, srcline);
+                                exit(1);
+                            }
+                        }
+                        sal_rel = 0;
+                        break;
+                    default:
+                        break;
+                    }
+                    if (num != 1) {
+                        printf("Error buscando operando %d en la línea %d\n", i + 1, srcline);
+                        exit(1);
+                    }
+                    //Ahora convertimos el operando cte, de registro o simbolico resuelto en instrucc (el no resuelto estará a cero)
+                    if (!register_invert)
+                        convBin(ops[i], instrucc + (INSTSIZE - 1) - posoper[new_id][i], operNumBits(new_id, i));
+
+                    //Inicializa cadenas de formato de siguientes operandos
+                    *fmtStr = '\0';
+                    *fmtStrSym = '\0';
+                }
+
+                if (register_invert) {
+                    convBin(ops[0], instrucc + (INSTSIZE - 1) - posoper[new_id][0], operNumBits(new_id, 0));
+                    convBin(ops[2], instrucc + (INSTSIZE - 1) - posoper[new_id][1], operNumBits(new_id, 2));
+                    convBin(ops[1], instrucc + (INSTSIZE - 1) - posoper[new_id][2], operNumBits(new_id, 1));
+                }
+        
+                //fseek(file, posfile, SEEK_SET);
+
+                if (*counter < MAXPROGRAMLEN) {
+                    //printf("Copiando la cadena de instrucc %s de tamaño %zu sobre la cadena de contenido ->%s<-\n", instrucc, strlen(instrucc), (char *)progmem[counter]);
+                    strncpy(progmem[*counter], instrucc, INSTSIZE+1);
+                    //printf("Programa en dir %u es instrucc %s\n",*counter, progmem[*counter]);
+                    (*counter)++;
+                }
             }
         }
-        else {
-            printf("Nemónico no reconocido en la línea: %u\n", srcline);
-        }
+        complex = 0;
     }
     else { //Es nemonico
         *code = true; //Se va a emitir código
@@ -309,7 +490,7 @@ void processMnemonic(FILE* file, char* line, int numread, bool *code, int srclin
                 if (i != (numoper - 1)) strcat(fmtStr, " , "); //Si no somos el último operando, consumir ws y coma enmedio
                 num = fscanf(file, fmtStr, &(ops[i]));
                 if (num != 1) {
-                    printf("Error buscando operando %d tipo registro con formato '%s' en línea %d\n", i + 1, fmtStr, srcline);
+                    printf("Error buscando operando %d tipo registro con formato R en línea %d\n", i + 1, srcline);
                     exit(1);
                 }
                 break;
@@ -324,22 +505,22 @@ void processMnemonic(FILE* file, char* line, int numread, bool *code, int srclin
                 num = fscanf(file, fmtStr, &(ops[i]));
                 if (num != 1) { //No se pudo leer bien el operando
                     fseek(file, posfile, SEEK_SET); //restauramos pos en fichero
-                    strcat(fmtStrSym, "%[^ ,\n\t]"); //Leer símbolo como cadena a ver 
+                    strcat(fmtStrSym, "%[^ ,\r\n\t]"); //Leer símbolo como cadena a ver 
                     if (i != (numoper - 1)) strcat(fmtStrSym, "%*[ ,\t]"); //si no somos ultimo operando quita espacios, tabs y coma siguientes
                     num = fscanf(file, fmtStrSym, simb);
                     if (num == 1) { //Ha habido suerte, ahora recuperar el valor del símbolo
                         int val = getSymbolValue(simb);
                         if (val != -1) { //Encontrado
-                            if (sal_rel) ops[i] = val - counter;
+                            if (sal_rel) ops[i] = val - *counter;
                             else ops[i] = val;
                         }
                         else { //No encontrado, meter en tabla de referencias para resolverlas al final
-                            addSymbRef(simb, srcline, counter, posoper[id][i], operNumBits(id, i));
+                            addSymbRef(simb, srcline, *counter, posoper[id][i], operNumBits(id, i));
                         }
                     }
                     else {
-                            printf("Error buscando operando %d cte con formato '%s' en la línea %d\n", i + 1, fmtStrSym, srcline);
-                            exit(1);
+                        printf("Error buscando operando %d cte con formato '%s' en la línea %d\n", i + 1, fmtStrSym, srcline);
+                        exit(1);
                     }
                 }
                 sal_rel = 0;
@@ -382,7 +563,7 @@ int readToWhitespace(FILE* file, char* cadena, int maxchars) {
     return numread;
 }
 
-int processLine(FILE* file, bool *code, int *currentline, int counter) {
+int processLine(FILE* file, bool *code, int *currentline, int *counter) {
     //devuelve 2 para fin de procesado de linea normal, 1 para fin de fichero con linea procesada lista, 0 para fin de fichero sin linea procesada
     //Los ws deben ser consumidos antes, esperamos entrar con caracter no ws
     char line[MAXLINE + 1];
@@ -430,7 +611,7 @@ int processLine(FILE* file, bool *code, int *currentline, int counter) {
         if ((c == ':') && (isSymbol == false)) { //fin de simbolo y no encontrado antes (no se chequea su cadena)
             if (numread > 0) {
                 *ptchar = '\0'; //Acaba la cadena
-                addSymbol(line, counter, *currentline);
+                addSymbol(line, *counter, *currentline);
             }
             else {
                 printf("Leída definición de símbolo vacío en línea: %d\n", *currentline);
@@ -503,7 +684,7 @@ int eatWhitespaceAndComments(FILE* file, int* linecount) {
     } while (1);
 }
 
-void ensambla(char* srcfilename, char* dstfilename, int* counter)
+void ensambla(char* srcfilename, char* dstfilename)
 {
     FILE *infile, *outfile;
     int currentline = 1;
@@ -516,7 +697,7 @@ void ensambla(char* srcfilename, char* dstfilename, int* counter)
     }
 
     //Inicializa toda la memoria de programa a '0':
-    if (!*counter) {
+    if (!counter) {
         memset(progmem, '0', MAXPROGRAMLEN * (INSTSIZE + 1));
         for (int i = 0; i < MAXPROGRAMLEN; i++) {
             *((char *)progmem + i * (long long)(INSTSIZE + 1) + INSTSIZE) = '\0'; //Cada instrucción como una cadena con "0"s acabada en '\0'
@@ -530,13 +711,13 @@ void ensambla(char* srcfilename, char* dstfilename, int* counter)
             memset(instrucc, '0', INSTSIZE); //Preparar el buffer de la instrucción todo a "0"
             instrucc[INSTSIZE] = '\0';
             codEmitido = false;
-            res = processLine(infile, &codEmitido, &currentline, *counter);
+            res = processLine(infile, &codEmitido, &currentline, &counter);
             //printf("I: %s\n", instrucc);
-            if (codEmitido && (*counter < MAXPROGRAMLEN)) {
+            if (codEmitido && (counter < MAXPROGRAMLEN)) {
                 //printf("Copiando la cadena de instrucc %s de tamaño %zu sobre la cadena de contenido ->%s<-\n", instrucc, strlen(instrucc), (char *)progmem[counter]);
-                strncpy(progmem[*counter], instrucc, INSTSIZE+1);
+                strncpy(progmem[counter], instrucc, INSTSIZE+1);
                 //printf("Programa en dir %u es instrucc %s\n",*counter, progmem[*counter]);
-                (*counter)++;
+                counter++;
             }
         }
         else {
@@ -585,17 +766,25 @@ int main(int argc, char* argv[]) {
         dstfilename = argv[2];
         //printf("Leyendo programa principal.\n");
         int progfile_line[] = {0, 513, 533, 553, 573, 593, 613, 633, 653};
-        ensambla(srcfilename, dstfilename, &progfile_line[0]);
+        counter = progfile_line[0];
+        ensambla(srcfilename, dstfilename);
         if (argc == 8) {
             //printf("Leyendo programa de interrupciones.\n");
             
-            for (int i = 1; i < sizeof(progfile_line)/sizeof(progfile_line[0])-5; i++)
-                ensambla(argv[6]/* button4 */, dstfilename, &progfile_line[i]);
-            ensambla(argv[3]/* button1 */, dstfilename, &progfile_line[7]);
-            ensambla(argv[4]/* button2 */, dstfilename, &progfile_line[6]);
-            ensambla(argv[5]/* button3 */, dstfilename, &progfile_line[5]);
-            ensambla(argv[6]/* button4 */, dstfilename, &progfile_line[4]);
-            ensambla(argv[7]/* timer */, dstfilename, &progfile_line[8]);
+            for (int i = 1; i < sizeof(progfile_line)/sizeof(progfile_line[0])-5; i++) {
+                counter = progfile_line[i];
+                ensambla(argv[6]/* button4 */, dstfilename);
+            }
+            counter = progfile_line[7];
+            ensambla(argv[3]/* button1 */, dstfilename);
+            counter = progfile_line[6];
+            ensambla(argv[4]/* button2 */, dstfilename);
+            counter = progfile_line[5];
+            ensambla(argv[5]/* button3 */, dstfilename);
+            counter = progfile_line[4];
+            ensambla(argv[6]/* button4 */, dstfilename);
+            counter = progfile_line[8];
+            ensambla(argv[7]/* timer */, dstfilename);
         } else {
             printf("No se han ensamblado interrupciones.\n");
             return 1;

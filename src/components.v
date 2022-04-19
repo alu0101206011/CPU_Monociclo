@@ -20,7 +20,7 @@ module regfile #(parameter REG_SEL = 4, WIDTH = 16) (input  wire        clk,
   // y la escritura del tercero ocurre en flanco de subida del reloj
   
   always @(posedge clk)
-    if (we3) regb[wa3] <= wd3;	
+    if (we3 && wa3 != 0) regb[wa3] <= wd3;	
   
   assign rd1 = (ra1 != 0) ? regb[ra1] : 16'b0;
   assign rd2 = (ra2 != 0) ? regb[ra2] : 16'b0;
