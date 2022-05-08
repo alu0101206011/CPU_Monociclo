@@ -1,9 +1,9 @@
 `timescale 1 ns / 10 ps
 
 module i_o_manager(input wire clk, reset, oe, 
-                   input wire [17:0] addr,
+                   input wire [15:0] addr,
                    input wire [3:0] buttons,
-                   input wire [9:0] switches,
+                   input wire [8:0] switches,
                    output wire [9:0] led_r,
                    output wire [7:0] led_g,
                    output wire [4:0] control_mem, // we ce oe lb ub
@@ -27,31 +27,31 @@ module i_o_manager(input wire clk, reset, oe,
   parameter MEMORY_STORE = 7'b0000x00;
   parameter MEMORY_LOAD = 7'b0010000;
 
-  always @(*)
+  always @(addr)
   begin
     if (reset)
       data_io <= 16'b0;
 
     le = 1'b0;
 
-    case (addr[15:0]) // para escribir en leds
+    case (addr) // para escribir en leds
 		16'b1111111111111101:
 		begin
 		  control <= NOP;
 		  data_io <= {12'b0, ~buttons};
       le = 1'b1;
 		end
-      16'b1111111111111110: 
+      16'b1111111111111110:
       begin
         control <= oe ? LED_RED : NOP;
-        data_io <= led_r;
-        le = ~oe; 
+        data_io <= {5'b0, led_r};
+        le = ~oe;
       end
-      16'b1111111111111111: 
+      16'b1111111111111111:
       begin
         control <= oe ? LED_GREEN : NOP;
-        data_io <= led_g; 
-        le = ~oe; 
+        data_io <= {7'b0, led_g};
+        le = ~oe;
       end
       default: control <= oe ? MEMORY_STORE : MEMORY_LOAD;
     endcase

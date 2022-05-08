@@ -19,7 +19,7 @@ EXECUTABLE_DEBUG=$ASSEMBLY_SOURCE/asm
 ASSEMBLY_CODE=$ASSEMBLY_CODE_SOURCE/code.asm
 ASSEMBLY_INTERRUPTION_CODES=$(ls $ASSEMBLY_INTERRUPTION_CODE_SOURCE/*)
 VERILOG_WALL=
-VERILOG_CODE=$(ls $VERILOG_CODE_SOURCE/* | grep -v _tb.v | grep -v .bak | grep -v progfile.mem | grep -v regfile.dat)
+VERILOG_CODE=$(ls $VERILOG_CODE_SOURCE/* | grep -v _tb.v | grep -v .bak | grep -v progfile.mem | grep -v regfile.dat  | grep -v .sdc)
 TEST_BENCH=$VERILOG_CODE_SOURCE/cpu_tb.v
 VERILOG_EXECUTABLE=$EXECUTABLE_SOURCE/cpu
 GTKWAVE=0
@@ -127,7 +127,7 @@ else
 fi
 
 if [ $GTKWAVE == 1 ]; then
-  #./mnt/c/Program\ Files/VcXsrv/xlaunch.exe
+  /mnt/c/Program\ Files/VcXsrv/xlaunch.exe
   export DISPLAY=:0
   echo
   echo "Abriendo GTKWave..."

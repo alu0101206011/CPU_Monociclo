@@ -5,7 +5,7 @@ module dp(input wire clk, reset, s_rel, s_inm, s_stack, s_data, we3, wez, push, 
           input wire [2:0] op_alu, 
           inout wire [15:0] data_inout, 
           input [7:0] int_e, s_calli, s_reti,
-          output wire z, c, overflow,
+          output wire z, c, overflow_ALU, overflow_Stack,
           output wire [7:0] opcode, min_bit_a, min_bit_s,
           output wire [15:0] addresses);
   
@@ -51,8 +51,9 @@ module dp(input wire clk, reset, s_rel, s_inm, s_stack, s_data, we3, wez, push, 
 
   // Overflow
   wire oflow;
-  assign oflow = stackUflow | stackOflow | aluOflow;
-  ffd ffo(clk, reset, oflow, wez, overflow);
+  assign oflow = stackUflow | stackOflow;
+  ffd ffoALU(clk, reset, aluOflow, wez, overflow_ALU);
+  ffd ffoStack(clk, reset, oflow, wez, overflow_Stack);
 
   // Interrupciones
   interrupt_manager #(8) IM(clk, reset, int_e, s_calli, s_reti, s_interr, min_bit_s, min_bit_a, interr_addr);

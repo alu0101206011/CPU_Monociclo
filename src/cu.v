@@ -1,7 +1,7 @@
 `timescale 1 ns / 10 ps
 
 module cu(input wire [7:0] opcode, 
-          input wire z, c, overflow, 
+          input wire z, c, overflow_ALU, overflow_Stack,
           input wire [7:0] min_bit_s, min_bit_a, 
           output wire s_rel, s_inm, s_stack, s_data, we3, wez, push, pop, oe,
           output wire [1:0] s_inc,
@@ -9,12 +9,13 @@ module cu(input wire [7:0] opcode,
           output reg [7:0] s_calli, s_reti);
 
   parameter NEW_INTER = 11'b00000010010;
+  parameter ERROR_INTER = 11'b00000110010;
   parameter ALU_R = 11'b00001100000;
   parameter ALU_I = 11'b01001100000;
-  parameter LOAD = 11'b01011000000;   // no probado
-  parameter LOADR = 11'b01011000000;  // no probado
-  parameter STORE = 11'b01000000100;  // no probado
-  parameter STORER = 11'b01000000100;  // no codificado
+  parameter LOAD = 11'b01011000000;
+  parameter LOADR = 11'b01011000000;
+  parameter STORE = 11'b01000000100;
+  parameter STORER = 11'b01000000100;
   parameter AB_JUMP = 11'b00000000001;
   parameter REL_JUMP = 11'b10000000000;
   parameter NOP = 11'b00000000000;
@@ -25,18 +26,19 @@ module cu(input wire [7:0] opcode,
 
   assign {s_rel, s_inm, s_stack, s_data, we3, wez, push, pop, oe, s_inc} = control;
 
-/*   initial
-  begin
-    s_calli = 8'b0;
-    s_reti = 8'b0;
-  end */
-
   always @(opcode, min_bit_a) 
   begin
-    if (overflow)
+    if (overflow_ALU)
     begin
       s_reti <= 8'b0;
       s_calli <= 8'b1;
+      op_alu <= 3'b0;
+      control <= NEW_INTER;
+    end
+    else if (overflow_Stack)
+    begin
+      s_reti <= 8'b0;
+      s_calli <= 8'b10;
       op_alu <= 3'b0;
       control <= NEW_INTER;
     end

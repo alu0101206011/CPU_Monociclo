@@ -34,8 +34,8 @@ module interrupt_manager #(parameter WIDTH = 8) (input wire clk, reset,
   always @(sel_a)
   begin
     casex (sel_a)
-      8'bxxxxxxx1: addr = 10'b1111111100;
-      8'bxxxxxx10: addr = 10'b1000000001;
+      8'bxxxxxxx1: addr = 10'b1111111000;
+      8'bxxxxxx10: addr = 10'b1111110000;
       8'bxxxxx100: addr = 10'b1000010101; 
       8'bxxxx1000: addr = 10'b1000101001;
       8'bxxx10000: addr = 10'b1000111101;

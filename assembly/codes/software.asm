@@ -1,3 +1,4 @@
 start:
-load R1 0xFFFD
+c2 R5 R0
+nop
 j start

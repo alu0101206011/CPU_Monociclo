@@ -1,6 +1,6 @@
 `timescale 1 ns / 10 ps
 
-module timer #(parameter M = 50000, WIDTH = 8) (input  wire clk, reset, //2500000 = 50 ms | 250000 = 5 ms | 25000 = 500 us | 50000 = 1 ms
+module timer #(parameter M = 8000000, WIDTH = 8) (input  wire clk, reset, //2500000 = 50 ms | 250000 = 5 ms | 25000 = 500 us | 50000 = 1 ms
                                                 output wire[WIDTH-1:0] pulse);
 
 localparam N = $clog2(M);

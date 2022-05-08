@@ -6,9 +6,10 @@ module cpu_tb;
 reg clk, reset;
 wire [15:0] data;
 wire [17:0] addresses;
-wire [9:0] led_r, switches;
+wire [9:0] led_r;
+wire [8:0] switches;
 reg [3:0] buttons;
-wire [7:0] led_g, interruption_timer, interruptions_io;
+wire [7:0] led_g, interruption_timer;
 wire [7:0] interruptions;
 wire [4:0] control_mem;
 wire oe;
@@ -24,15 +25,16 @@ begin
 end
 
 // instancia entrada salida
-i_o_manager in_out(clk, reset, oe, addresses, buttons, switches, led_r, led_g, control_mem, data);
+i_o_manager in_out(clk, reset, oe, addresses[15:0], buttons, switches, led_r, led_g, control_mem, data);
 
 // instancia del procesador
 cpu cpumono(clk, reset, interruptions, oe, addresses[15:0], data);
 
 // timer
-timer #(7,8) timer_interrupt(clk, reset, interruption_timer);
+timer #(200,8) timer_interrupt(clk, reset, interruption_timer);
 
-assign interruptions = interruption_timer | interruptions_io;
+assign interruptions = interruption_timer;
+assign addresses[17:16] = 2'b00;
 
 initial
 begin
@@ -40,7 +42,7 @@ begin
   $dumpvars;
   for (idx = 0; idx < 16; idx = idx + 1) $dumpvars(0,cpu_tb.cpumono.data_path.register_file.regb[idx]);  
   for (idx = 0; idx < 16; idx = idx + 1) $dumpvars(0,cpu_tb.cpumono.data_path.Stack.stackmem[idx]);
-
+  buttons <= 16'b1111111111111111;
   reset = 1;  //a partir del flanco de subida del reset empieza el funcionamiento normal
   #10;
   reset = 0;  //bajamos el reset 
@@ -61,7 +63,7 @@ reg signed [15:0] registers;
 
 initial
 begin
-  #(120*120);  //Esperamos 12 ciclos o 12 instrucciones
+  #(120*500);  //Esperamos 12 ciclos o 12 instrucciones
   for (idx = 0; idx < 16; idx = idx + 1)
   begin
     registers[15:0] = cpu_tb.cpumono.data_path.register_file.regb[idx];

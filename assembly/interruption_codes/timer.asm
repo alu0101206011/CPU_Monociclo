@@ -1,15 +1,12 @@
-subi R2 R1 1
-jz detection
-li R2 1
-# Si led encendido apagalo
+# encender y apagar led verde
+load R14 0xFFFF
+li R15 0xFF
+bne R14 R15 encender_leds_verdes
 
-# Si no enciende
-store R0 0xFFFE
-store R2 0xFFFF
+# apaga
+store R0 0xFFFF
 reti
 
-detection:
-li R2 1 
-store R2 0xFFFE
-store R0 0xFFFF
+encender_leds_verdes:
+store R15 0xFFFF
 reti

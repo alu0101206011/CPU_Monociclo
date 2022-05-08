@@ -155,3 +155,50 @@ justo cuando vamos a decidir un salto.
 
 Además no sería bueno limitar los saltos en las interrupciones en si. Por esta razón nacieron
 los biestables de salto en las interrupciones.
+
+
+# Quartus II
+## Software
+
+## Problemas
+
+- Slacks negativos
+Hay instrucciones que producen slacks negativos
+
+![Funciona 1º versión](./img/funciona_li_bucle_infinito_programa_principal_con_parpadeo_de_leds_verdes_timer.png)
+
+El codigo ensamblador utilizado para que funcione el parpadeo:
+
+Programa principal
+```ensamblador
+start:
+li R2 0
+nop       # Este nop es necesario porque si no hay slack negativo
+j start
+```
+
+timer
+```ensamblador
+# encender y apagar led verde
+load R14 0xFFFF
+li R15 0xFF
+bne R14 R15 encender_leds_verdes
+
+# apaga
+store R0 0xFFFF
+reti
+
+encender_leds_verdes:
+store R15 0xFFFF
+reti
+```
+
+Con esta versión se descontrolan los 7 segmentos y no sé la razón.
+
+En esta versión se pone 8808.
+
+Ahora asigné pines de switches y hay slacks negativo
+
+
+
+

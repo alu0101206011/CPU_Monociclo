@@ -1,5 +1,5 @@
 li R1 6
-li R2 4
+li R2 2
 
 bgt R1 R2 victoria
 
@@ -10,3 +10,4 @@ jrel infiniteloop
 
 victoria:
 li R7 7
+j infiniteloop

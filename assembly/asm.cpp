@@ -71,11 +71,11 @@ const int posoper[NUMINS][MAXNUMOPER] = { {19, 27, 0},      // mov      RR      
                                           {0, 0, 0} };      // nop      none    00011111
 
 
-const char* complex_mnemonics[] = {"beq", "bne", "blt", "ble", "bgt", "bge"};
+const char* complex_mnemonics[] = {"beq", "bne", "blt", "ble", "bgt", "bge", "beqi", "bnei", "blti", "blei", "bgti", "bgei"};
 
 #define NUMCOMINS (sizeof(complex_mnemonics)/sizeof(complex_mnemonics[0]))     //Número de instrucciones deducido de la matriz de nemónicos
 
-const char* complex_operands[] = {"RRS", "RRS", "RRS", "RRS", "RRS", "RRS"};
+const char* complex_operands[] = {"RRS", "RRS", "RRS", "RRS", "RRS", "RRS", "RCS", "RCS", "RCS", "RCS", "RCS", "RCS"};
 
 //*************************************************************************************************************************************************************************
 // Normalmente no sería necesario tocar el código de más abajo para adaptar a un ensamblador nuevo, salvo modificaciones en codificación de parámetros como salto relativo
@@ -291,7 +291,7 @@ void processMnemonic(FILE* file, char* line, int numread, bool *code, int srclin
                 memset(instrucc, '0', INSTSIZE); //Preparar el buffer de la instrucción todo a "0"
                 instrucc[INSTSIZE] = '\0';
 
-                if (complex_mnemonics[id] == "beq") { // necesitamos guardar en la instrucc el opcode en cuestion
+                if (strstr(complex_mnemonics[id], "beq")) { // necesitamos guardar en la instrucc el opcode en cuestion
                     complex = 1;
                     if (instrucciones == 0) {
                         memcpy(instrucc, opcodes[id_sub], strlen(opcodes[id_sub])); // opcode sub R1 R2
@@ -765,10 +765,10 @@ int main(int argc, char* argv[]) {
         char *dstfilename = new char[sizeof(argv[2])+1];
         dstfilename = argv[2];
         //printf("Leyendo programa principal.\n");
-        int progfile_line[] = {0, 513, 533, 553, 573, 593, 613, 633, 653};
+        int progfile_line[] = {0, 513, 533, 553, 573, 593, 613, 633, 653, 1008, 1016};
         counter = progfile_line[0];
         ensambla(srcfilename, dstfilename);
-        if (argc == 8) {
+        if (argc == 10) {
             //printf("Leyendo programa de interrupciones.\n");
             
             for (int i = 1; i < sizeof(progfile_line)/sizeof(progfile_line[0])-5; i++) {
@@ -783,8 +783,12 @@ int main(int argc, char* argv[]) {
             ensambla(argv[5]/* button3 */, dstfilename);
             counter = progfile_line[4];
             ensambla(argv[6]/* button4 */, dstfilename);
-            counter = progfile_line[8];
-            ensambla(argv[7]/* timer */, dstfilename);
+            counter = progfile_line[9];  // error stack
+            ensambla(argv[7]/* error1 */, dstfilename);
+            counter = progfile_line[10];  // error alu
+            ensambla(argv[8]/* error2 */, dstfilename);
+            counter = progfile_line[8]; // 653
+            ensambla(argv[9]/* timer */, dstfilename);
         } else {
             printf("No se han ensamblado interrupciones.\n");
             return 1;
