@@ -46,13 +46,13 @@ reg signed [15:0] registers;
 
 initial
 begin
-  #(120*120000);
-/*  for (idx = 0; idx < 16; idx = idx + 1)
+  #(120*12000);
+  for (idx = 0; idx < 16; idx = idx + 1)
   begin
     registers[15:0] = cpu_tb.datalogger.cpumono.data_path.register_file.regb[idx];
     $write("R%d = %d\n",idx, registers);
   end
-  */
+
   $finish;
 end
 

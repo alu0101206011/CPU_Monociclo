@@ -20,7 +20,7 @@ ASSEMBLY_CODE=$ASSEMBLY_CODE_SOURCE/code.asm
 ASSEMBLY_INTERRUPTION_CODES=$(ls $ASSEMBLY_INTERRUPTION_CODE_SOURCE/*)
 VERILOG_WALL=
 VERILOG_CODE=$(ls $VERILOG_CODE_SOURCE/* | grep -v _tb.v | grep -v .bak | grep -v progfile.mem | grep -v regfile.dat  | grep -v .sdc)
-TEST_BENCH=$VERILOG_CODE_SOURCE/cpu_tb.v
+TEST_BENCH=$VERILOG_CODE_SOURCE/cpu_environment_tb.v
 VERILOG_EXECUTABLE=$EXECUTABLE_SOURCE/cpu
 GTKWAVE=0
 GTKWAVE_EXECUTABLE=$EXECUTABLE_SOURCE/cpu_tb.vcd
@@ -120,19 +120,19 @@ if [ $DEBUG_ON == 0 ]; then
   fi
 
   echo "Probando test bench"
-  echo iverilog -o $VERILOG_EXECUTABLE $VERILOG_WALL $VERILOG_CODE $TEST_BENCH
-  if iverilog -o $VERILOG_EXECUTABLE $VERILOG_WALL $VERILOG_CODE $TEST_BENCH; then 
-    echo vvp $VERILOG_EXECUTABLE 
+  echo iverilog -o $VERILOG_EXECUTABLE $VERILOG_WALL -pfileline=1 $VERILOG_CODE $TEST_BENCH
+  if iverilog -o $VERILOG_EXECUTABLE $VERILOG_WALL -pfileline=1 $VERILOG_CODE $TEST_BENCH; then 
+    echo vvp $VERILOG_EXECUTABLE
     echo
-    vvp $VERILOG_EXECUTABLE | grep -v "VCD warning: array word"
+    vvp $VERILOG_EXECUTABLE
   else
     exit_error "Error compilando iverilog"
   fi
 fi
 
 if [ $GTKWAVE == 1 ]; then
-  /mnt/c/Program\ Files/VcXsrv/xlaunch.exe
-  export DISPLAY=:0
+  #/mnt/c/Program\ Files/VcXsrv/xlaunch.exe
+  #export DISPLAY=:0
   echo
   echo "Abriendo GTKWave..."
   echo gtkwave $GTKWAVE_EXECUTABLE

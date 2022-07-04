@@ -3,7 +3,7 @@
 module i_o_manager(input wire clk, reset, oe, 
                    input wire [15:0] addr,
                    input wire [3:0] buttons,
-                   input wire [8:0] switches,
+                   input wire [9:0] switches,
                    //output wire [9:0] led_r,
                    output wire [7:0] led_g,
                    output wire [4:0] control_mem, // we ce oe lb ub

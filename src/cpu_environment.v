@@ -1,7 +1,7 @@
 `timescale 1 ns / 10 ps
 
 module cpu_environment(input wire clk, reset,
-                       input wire [8:0] switches,
+                       input wire [9:0] switches,
                        input wire [3:0] buttons,
                        output wire [9:0] led_r,
                        output wire [7:0] led_g,
@@ -20,7 +20,7 @@ module cpu_environment(input wire clk, reset,
   cpu cpumono(clk, reset, interruptions, oe, addresses[15:0], program_counter, prueba, data);
 
   // timer
-  timer #(10, 8) timer_interrupt(clk, reset, interruptions);
+  timer #(30, 8) timer_interrupt(clk, reset, interruptions);
 // 135135135 medio segundo con 27MHz
 
   assign addresses[17:16] = 2'b00;
@@ -29,6 +29,3 @@ module cpu_environment(input wire clk, reset,
 
 
 endmodule
-// quartus placa 484c7
-// tools
-// signaltag es algo de ultimo remedio
