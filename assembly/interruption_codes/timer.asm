@@ -1,5 +1,6 @@
 # encender y apagar led verde
-load R14 0xFFFF
+#load R14 0xFFFF
+li R14 0
 li R15 0xFF
 bne R14 R15 encender_leds_verdes
 

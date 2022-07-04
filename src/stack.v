@@ -7,19 +7,24 @@ module stack(input  wire       clk, reset, push, pop, interrupt,
 
   reg[9:0] stackmem[0:15]; //memoria de 16 de tamaño con 10 bits de ancho
   reg[4:0] sp;  // Un bit más de control
+  wire[3:0] spinc, spdec;
+  
+  assign spinc = sp + 5'b1;
+  assign spdec = sp - 5'b1;
 
   always @(posedge clk, posedge reset)
   begin
-	 if (reset)
+	 if (reset) begin
       sp <= 5'b0;
+	end
     else if (push)
     begin
       if (sp[3:0] == 4'b1111)
         sp[4] <= 1'b1;
       else
       begin
-        sp <= sp + 4'b1;
-        stackmem[sp + 4'b1] <= pc_addr;
+        stackmem[spinc] <= pc_addr;
+		  sp <= spinc;
       end
     end
     else if (pop)
@@ -27,7 +32,7 @@ module stack(input  wire       clk, reset, push, pop, interrupt,
       if (sp[3:0] ==  4'b0)
         sp[4] <= 1'b1;
       else
-        sp <= sp - 4'b1;
+        sp <= spdec;
     end
   end
   assign out = interrupt ? stackmem[sp] : stackmem[sp] + 10'b1;

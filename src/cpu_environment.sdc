@@ -1,1 +1,2 @@
-create_clock -period 36 [get_ports clk]
+read_sdc -hdl
+create_clock -period 37.037 [get_ports clk]

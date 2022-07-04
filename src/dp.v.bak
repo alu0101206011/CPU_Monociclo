@@ -4,19 +4,13 @@ module dp(input wire clk, reset, s_rel, s_inm, s_stack, s_data, we3, wez, push, 
           input wire [1:0] s_inc,
           input wire [2:0] op_alu, 
           inout wire [15:0] data_inout, 
-          input wire [7:0] int_e, s_calli,
-			 input wire s_reti,
+          input [7:0] int_e, s_calli, s_reti,
           output wire z, c, overflow_ALU, overflow_Stack,
-          output wire [7:0] opcode, min_bit_a, min_bit_s, int_a,
-          output wire [15:0] addresses,
-			 output wire [9:0] program_counter,
-			 output wire [9:0] out_stack);
+          output wire [7:0] opcode, min_bit_a, min_bit_s,
+          output wire [15:0] addresses);
   
   wire[31:0] instructions;
   wire[9:0] out_PC, out_incMux, out_pcAdder, out_relMux, out_stackMux, interr_addr;
-  
-  wire [7:0] int_s, data_a, data_s;
-  assign program_counter = out_PC;
 
   // Incremento
   register #(10) PC(clk, reset, 1'b1, out_stackMux, out_PC);
@@ -25,7 +19,7 @@ module dp(input wire clk, reset, s_rel, s_inm, s_stack, s_data, we3, wez, push, 
   mux4 #(10) incMux(out_pcAdder, instructions[9:0], interr_addr, 10'b0, s_inc, out_incMux);
 
   // Pila
-  //wire[9:0] out_stack;
+  wire[9:0] out_stack;
   wire s_interr, stackOflow, stackUflow;
   stack Stack(clk, reset, push, pop, s_interr, out_PC, out_stack, stackUflow, stackOflow);
   mux2 #(10) stackMux(out_incMux, out_stack, s_stack, out_stackMux);
@@ -62,9 +56,9 @@ module dp(input wire clk, reset, s_rel, s_inm, s_stack, s_data, we3, wez, push, 
   ffd ffoStack(clk, reset, oflow, wez, overflow_Stack);
 
   // Interrupciones
-  interrupt_manager #(8) IM(clk, reset, int_e, s_calli, s_reti, s_interr, min_bit_s, min_bit_a, int_a, int_s, data_a, data_s, interr_addr);
+  interrupt_manager #(8) IM(clk, reset, int_e, s_calli, s_reti, s_interr, min_bit_s, min_bit_a, interr_addr);
 
-  //transceiver
+  //transeiver
   transceiver tr(oe, rd1, data, data_inout);
   assign addresses = out_ALU;
   assign opcode = instructions[31:24];

@@ -45,12 +45,13 @@ exit_error() {
 
 
 usage() {
-  echo "usage: ejecutar.sh [-d] [-g] [-ac fichero] [-t fichero] [-w] [-h]"
+  echo "usage: ejecutar.sh [-d] [-g] [-ac fichero] [-t fichero] [-w] [-q] [-h]"
   echo -e "\n\tComando -d o --debug Ejecuta en el ejectuable asm para debugear el código ensamblador en vscode. 
 \tComando -g o --gtkwave ejecuta el GTKWave. 
 \tComando -ac o --assembly_code [fichero] Ejecutamos el programa con el fichero indicado por línea de comandos escrito en ensamblador.
 \tComando -t o --testbench [fichero] Ejecutamos el test bench indicado por línea de comandos.
 \tComando -w o --Wall Compila verilog enseñando todos los warnings.
+\tComando -q o --quartus Prepara la memoria de programa y los registros para Quartus II
 \tComando -h o --help muesta esta ayuda.\n"
 }
 
@@ -65,6 +66,7 @@ while [ "$1" != "" ]; do
 
     -d | --debug )
       EXECUTABLE=$EXECUTABLE_DEBUG
+      DEBUG_ON=1
       ;;
 
     -g | --gtkwave )
@@ -108,22 +110,24 @@ else
   exit_error "Error de compilación del ensamblador"
 fi
 
-echo "Ejecutando código ensamblador..."
-echo $EXECUTABLE $ASSEMBLY_CODE $MEMORY $ASSEMBLY_INTERRUPTION_CODES
-if $EXECUTABLE $ASSEMBLY_CODE $MEMORY $ASSEMBLY_INTERRUPTION_CODES; then
-  echo
-else 
-  exit_error "Error de ejecución del ensamblador"
-fi
+if [ $DEBUG_ON == 0 ]; then
+  echo "Ejecutando código ensamblador..."
+  echo $EXECUTABLE $ASSEMBLY_CODE $MEMORY $ASSEMBLY_INTERRUPTION_CODES
+  if $EXECUTABLE $ASSEMBLY_CODE $MEMORY $ASSEMBLY_INTERRUPTION_CODES; then
+    echo
+  else 
+    exit_error "Error de ejecución del ensamblador"
+  fi
 
-echo "Probando test bench"
-echo iverilog -o $VERILOG_EXECUTABLE $VERILOG_WALL $VERILOG_CODE $TEST_BENCH
-if iverilog -o $VERILOG_EXECUTABLE $VERILOG_WALL $VERILOG_CODE $TEST_BENCH; then 
-  echo vvp $VERILOG_EXECUTABLE 
-  echo
-  vvp $VERILOG_EXECUTABLE | grep -v "VCD warning: array word"
-else
-  exit_error "Error compilando iverilog"
+  echo "Probando test bench"
+  echo iverilog -o $VERILOG_EXECUTABLE $VERILOG_WALL $VERILOG_CODE $TEST_BENCH
+  if iverilog -o $VERILOG_EXECUTABLE $VERILOG_WALL $VERILOG_CODE $TEST_BENCH; then 
+    echo vvp $VERILOG_EXECUTABLE 
+    echo
+    vvp $VERILOG_EXECUTABLE | grep -v "VCD warning: array word"
+  else
+    exit_error "Error compilando iverilog"
+  fi
 fi
 
 if [ $GTKWAVE == 1 ]; then

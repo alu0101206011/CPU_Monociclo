@@ -112,6 +112,8 @@ Para la realización de esta CPU se han necesitado varios componentes:
 - Max_priority_bit: Modulo que me indica el bit menos significativo de un número binario, para poder elegir la prioridad en las interrupciones.
 - Transceiver: Para manejar el bus inout de datos que va hacia afuera de la CPU.
 
+creo que faltan cosas
+
 ## Pila
 ![Pila](./img/pila.png)
 
@@ -147,6 +149,20 @@ Dentro de la unidad de control, para un uso más sencillo de las señales se han
 a un reg de control es asignado a una concatenación de casi todas las señales de salida de la UC. El op_alu es una excepción por su facilidad al asignarle parte del 
 opcode.
 
+
+## Entrada Salida
+
+
+## Interrupciones
+La CPU cuenta con un sistema de interrupcciones jerarquico. Posee de un total de 8 interrupciones.
+
+Para realizar esto se han utilizado 2 vectores, uno de selección y otro de atención
+
+ diferentes donde la interrupción de mayor prioridad será el bit
+menos significativo de un vector de prioridades.
+
+
+
 ## Biestables
 
 ### Biestables en las interrupciones
@@ -157,15 +173,15 @@ Además no sería bueno limitar los saltos en las interrupciones en si. Por esta
 los biestables de salto en las interrupciones.
 
 
+
+
 # Quartus II
 ## Software
 
 ## Problemas
 
-- Slacks negativos
+### Slacks negativos
 Hay instrucciones que producen slacks negativos
-
-![Funciona 1º versión](./img/funciona_li_bucle_infinito_programa_principal_con_parpadeo_de_leds_verdes_timer.png)
 
 El codigo ensamblador utilizado para que funcione el parpadeo:
 
@@ -200,5 +216,13 @@ En esta versión se pone 8808.
 Ahora asigné pines de switches y hay slacks negativo
 
 
+### Solución para los slacks negativos
+Bajar la frecuencia de reloj a 27MHz, siendo el periodo de 37ns
 
+
+
+### Program Counter no va bien
+He puesto el reloj en un botón y muestro el program counter en los leds rojos.
+
+Todo va como se espera pero cuando salta la interrupción del timer al volver no salta bien a atrás.
 

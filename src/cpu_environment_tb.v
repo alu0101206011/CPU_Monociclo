@@ -40,16 +40,6 @@ begin
   #10;
   reset = 0;  //bajamos el reset 
 
-  #10
-  buttons = 16'b1110;
-  #1000
-  buttons = 16'b0;
-
-  #1000
-  buttons = 16'b10;
-  #200
-  buttons = 16'b0;
-
 end
 
 reg signed [15:0] registers;

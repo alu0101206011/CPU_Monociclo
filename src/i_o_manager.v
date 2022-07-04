@@ -4,7 +4,7 @@ module i_o_manager(input wire clk, reset, oe,
                    input wire [15:0] addr,
                    input wire [3:0] buttons,
                    input wire [8:0] switches,
-                   output wire [9:0] led_r,
+                   //output wire [9:0] led_r,
                    output wire [7:0] led_g,
                    output wire [4:0] control_mem, // we ce oe lb ub
                    inout wire [15:0] data);
@@ -15,6 +15,7 @@ module i_o_manager(input wire clk, reset, oe,
   reg le;
   reg [6:0] control;
   reg [15:0] data_io;
+  wire [9:0] led_r;
 
   register #(10) leds_red(clk, reset, wr, data_cpu[9:0], led_r);
   register #(8) leds_green(clk, reset, wg, data_cpu[7:0], led_g);
