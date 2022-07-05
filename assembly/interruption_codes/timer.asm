@@ -10,4 +10,10 @@ reti
 
 encender_leds_verdes:
 store R15 0xFFFF
+#li R15 0xF0
+#nop
+#store R15 0xFFFF
+#li R15 0x0F
+#nop
+#store R15 0xFFFF
 reti
