@@ -26,7 +26,7 @@ module io_manager(input wire clk, reset, oe_cpu,
   parameter LED_RED = 7'b10x1xxx;
   parameter LED_GREEN = 7'b01x1xxx;
   parameter NOP = 7'b00x1xxx;
-  parameter MEMORY_STORE = 7'b0000x00;
+  parameter MEMORY_STORE = 7'b0000x00;  // we ce oe_mem lb ub
   parameter MEMORY_LOAD = 7'b0010000;
 
   always @(*)

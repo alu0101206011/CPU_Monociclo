@@ -9,13 +9,14 @@ module dp(input wire clk, reset, s_rel, s_inm, s_stack, s_data, we3, wez, push, 
           output wire [7:0] opcode, min_bit_a, min_bit_s, int_a,
           output wire [15:0] addresses,
           output wire [9:0] program_counter,
-          output wire [9:0] out_stack);
+          output wire [9:0] prueba);
   
   wire[31:0] instructions;
   wire[9:0] out_PC, out_incMux, out_pcAdder, out_relMux, out_stackMux, interr_addr;
   
   wire [7:0] int_s, data_a, data_s;
-  assign program_counter = rd1;
+  assign program_counter = out_PC;
+  assign prueba = rd1;
 
   // Incremento
   register #(10) PC(clk, reset, 1'b1, out_stackMux, out_PC);
@@ -24,7 +25,7 @@ module dp(input wire clk, reset, s_rel, s_inm, s_stack, s_data, we3, wez, push, 
   mux4 #(10) incMux(out_pcAdder, instructions[9:0], interr_addr, 10'b0, s_inc, out_incMux);
 
   // Pila
-  //wire[9:0] out_stack;
+  wire[9:0] out_stack;
   wire s_interr, stackOflow, stackUflow;
   stack Stack(clk, reset, push, pop, s_interr, out_PC, out_stack, stackUflow, stackOflow);
   mux2 #(10) stackMux(out_incMux, out_stack, s_stack, out_stackMux);

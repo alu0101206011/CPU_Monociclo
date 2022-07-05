@@ -1,5 +1,5 @@
 # Encender leds rojos intercalados 682 = 1010101010 Error 
-# Error en la pila
+# Error en overflow pila
 bucle:
 nop
 li R1 682
