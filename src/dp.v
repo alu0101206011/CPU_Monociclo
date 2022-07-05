@@ -8,14 +8,14 @@ module dp(input wire clk, reset, s_rel, s_inm, s_stack, s_data, we3, wez, push, 
           output wire z, c, overflow_ALU, overflow_Stack,
           output wire [7:0] opcode, min_bit_a, min_bit_s, int_a,
           output wire [15:0] addresses,
-			 output wire [9:0] program_counter,
-			 output wire [9:0] out_stack);
+          output wire [9:0] program_counter,
+          output wire [9:0] out_stack);
   
   wire[31:0] instructions;
   wire[9:0] out_PC, out_incMux, out_pcAdder, out_relMux, out_stackMux, interr_addr;
   
   wire [7:0] int_s, data_a, data_s;
-  assign program_counter = out_PC;
+  assign program_counter = rd1;
 
   // Incremento
   register #(10) PC(clk, reset, 1'b1, out_stackMux, out_PC);

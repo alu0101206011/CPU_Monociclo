@@ -1,10 +1,10 @@
 `timescale 1 ns / 10 ps
 
-module i_o_manager(input wire clk, reset, oe_cpu, 
+module io_manager(input wire clk, reset, oe_cpu, 
                    input wire [15:0] addr,
                    input wire [3:0] buttons,
                    input wire [9:0] switches,
-                   //output wire [9:0] led_r,
+                   output wire [9:0] led_r,
                    output wire [7:0] led_g,
                    output wire [4:0] control_mem, // we ce oe_mem lb ub
                    inout wire [15:0] data);
@@ -15,7 +15,8 @@ module i_o_manager(input wire clk, reset, oe_cpu,
   reg oe_io;
   reg [6:0] control;
   reg [15:0] data_io;
-  wire [9:0] led_r;
+  //wire [9:0] led_r;
+  //wire [7:0] led_g;
 
   register #(10) leds_red(clk, reset, wr, data_cpu[9:0], led_r);
   register #(8) leds_green(clk, reset, wg, data_cpu[7:0], led_g);
@@ -34,10 +35,17 @@ module i_o_manager(input wire clk, reset, oe_cpu,
     begin
       data_io <= 16'b0;
       oe_io <= 1'b0;
+		control <= NOP;
     end
     else
     begin
       case (addr) // usando parte de la memoria para controlar leds
+        16'b1111111111111100:
+        begin
+          control <= NOP;
+          data_io <= {6'b0, switches[8:0]};
+          oe_io <= 1'b1;
+        end		
         16'b1111111111111101:
         begin
           control <= NOP;
