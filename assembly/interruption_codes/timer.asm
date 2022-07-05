@@ -16,10 +16,9 @@ store R3 0xFFFF         # Si no encendemos
 reti
 
 savemode:
-#beq R11 R5 errormem   # Si llegamos al maximo de la memoria no podemos guardar más
-#storer R9 R11 0
-#addi R11 R11 1
-store R9 1
+beq R11 R5 errormem   # Si llegamos al maximo de la memoria no podemos guardar más
+storer R9 R11 0
+addi R11 R11 1
 load R13 0xFFFF          # Miramos si los leds están encendidos
 beq R12 R13 turnoffgled
 store R12 0xFFFF         # Si no encendemos
@@ -27,14 +26,11 @@ reti
 
 
 showmode:
-#beq R11 R0 idel         # Si llegamos al minimo de la memoria no podemos mostrar más
-#subi R11 R11 1
-load R12 1
-#load R8 0xFFFE          # Miramos si los leds están encendidos ROJO
-#beq R9 R8 turnoffrled
-store R12 0xFFFE         # Si no encendemos
-
-load R10 0xFFFF          # Miramos si los leds están encendidos
+beq R11 R0 idel         # Si llegamos al minimo de la memoria no podemos mostrar más
+subi R11 R11 1
+loadr R13 R11 0
+store R13 0xFFFE         # Si no encendemos
+load R10 0xFFFF          # Miramos si los leds  VERDES están encendidos
 beq R1 R10 turnoffgled
 store R1 0xFFFF         # Si no encendemos
 reti

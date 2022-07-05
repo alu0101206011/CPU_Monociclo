@@ -90,9 +90,17 @@ module opcode_cu(input wire [7:0] opcode, input wire we, z, c, output wire [13:0
     else if (opcode[6:4] != 3'b001) // opcode[7] == 0
       casex (opcode[6:4])
         3'b000: control2 <= STORE;
-        3'b010: control2 <= STORER;
+        3'b010: 
+        begin
+          control2 = STORER;
+          control2[3:1] = 3'b010; // suma
+        end
         3'b011: control2 <= LOAD;
-        3'b100: control2 <= LOADR;
+        3'b100: 
+        begin
+          control2 = LOADR;
+          control2[3:1] = 3'b010; // suma
+        end
         3'b101: control2 <= CALL;
         3'b110: control2 <= RETURN;
         default: control2 <= NOP;
