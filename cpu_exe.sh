@@ -120,8 +120,8 @@ if [ $DEBUG_ON == 0 ]; then
   fi
 
   echo "Probando test bench"
-  echo iverilog -o $VERILOG_EXECUTABLE $VERILOG_WALL -pfileline=1 $VERILOG_CODE $TEST_BENCH
-  if iverilog -o $VERILOG_EXECUTABLE $VERILOG_WALL -pfileline=1 $VERILOG_CODE $TEST_BENCH; then 
+  echo iverilog -o $VERILOG_EXECUTABLE $VERILOG_WALL $VERILOG_CODE $TEST_BENCH
+  if iverilog -o $VERILOG_EXECUTABLE $VERILOG_WALL $VERILOG_CODE $TEST_BENCH; then 
     echo vvp $VERILOG_EXECUTABLE
     echo
     vvp $VERILOG_EXECUTABLE

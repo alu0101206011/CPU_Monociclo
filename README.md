@@ -188,8 +188,7 @@ El codigo ensamblador utilizado para que funcione el parpadeo:
 Programa principal
 ```ensamblador
 start:
-li R2 0
-nop       # Este nop es necesario porque si no hay slack negativo
+c2 R5 R0
 j start
 ```
 
@@ -220,9 +219,29 @@ Ahora asigné pines de switches y hay slacks negativo
 Bajar la frecuencia de reloj a 27MHz, siendo el periodo de 37ns
 
 
-
 ### Program Counter no va bien
 He puesto el reloj en un botón y muestro el program counter en los leds rojos.
 
 Todo va como se espera pero cuando salta la interrupción del timer al volver no salta bien a atrás.
+
+Además si muestro en un led el s_reti, se ve que está en triestado.
+
+### Solución
+El problema era que había un bucle lógico entre la unidad de control y el inter_manager.
+Cambié el diseño de los bloques always y en vez de usar data_s para calcular la interrupción
+uso int_s en el min_bit_s.
+
+Aquí el problema más grave era data_s, ya que el return borraba
+su bit, por lo que cambiaba el min_bit_s, y volvía a chequear el return
+y volvía a borrar ese bit y cambiaría otra vez min_bit_s.
+
+Al cambiar a int_s el min_bit_s, nos encontramos en un valor estable todo el ciclo.
+
+
+### Problema en el store
+Tengo un ejemplo de que se encienden o apagan los leds verdes según corresponda.
+
+En este ejemplo se encienden correctamente los leds y se apagan pero luego no se vuelven a encender nunca más
+Y eso que salta bien, por lo que debe de haber algún tipo de problema en el store porque al saltar bien significa que el
+load lo hace correctamente.
 
