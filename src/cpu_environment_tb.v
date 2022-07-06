@@ -2,12 +2,12 @@
 
 module cpu_tb;
 
-
 reg clk, reset;
 wire [15:0] data;
 wire [17:0] addresses;
-wire [9:0] led_r, switches;
+wire [9:0] led_r;
 reg [3:0] buttons;
+reg [9:0] switches;
 wire [7:0] led_g;
 wire [4:0] control_mem;
 wire oe;
@@ -40,8 +40,22 @@ begin
   #10;
   reset = 0;  //bajamos el reset 
 
-  #30
+  #1000;
   buttons = 4'b1110;
+  #1000;
+  buttons = 4'b1111;
+  #1000;
+  switches = 10'b0101010101;
+  buttons = 4'b0111;
+  #1000;
+  switches = 10'b0;
+  buttons = 4'b1111;  
+  #1000;
+  buttons = 4'b1101;
+  #1000;
+  buttons = 4'b1011;
+  #1000;  
+
 
 end
 
@@ -49,7 +63,7 @@ end
 
 initial
 begin
-  #(120*12000);
+  #(120*1200);
   /*for (idx = 0; idx < 16; idx = idx + 1)
   begin
     registers[15:0] = cpu_tb.datalogger.cpumono.data_path.register_file.regb[idx];

@@ -1,6 +1,6 @@
 `timescale 1 ns / 10 ps
 
-module io_manager(input wire clk, reset, oe_cpu, 
+module io_manager(input wire clk, reset, oe_cpu,
                    input wire [15:0] addr,
                    input wire [3:0] buttons,
                    input wire [9:0] switches,

@@ -23,6 +23,7 @@ j start
 
 stopread:
 li R15 0
+li R14 0
 j start
 
 showred:

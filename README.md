@@ -248,3 +248,21 @@ load lo hace correctamente.
 ### Solución
 Hacer que en el bloque always se pueda poner una `*` en la lista de sensibilidad. Además también es necesario que los if siempre tengan un else
 correspondiente que tenga lo que deben valer.
+
+
+# Proyecto libre
+He realizado un datalogger, el cual tiene un estado recogida de datos y un estado mostrar datos.
+
+Se utilizan los botones para realizar esto:
+- KEY0: Es usado para activar el modo recogida de datos.
+- KEY3: Es usado para guardar el estado actual de los switches en la SRAM.
+- KEY1: Limpiamos los leds y los estados.
+- KEY2: Activamos el modo mostrar que enseñará los estados.
+
+Para ello he usado el ensamblador que he mejorado en dos ficheros que se encuentran en el directorio assembly.
+El programa principal se encuentra en `software.asm` y las interrupciones del timer en `timer.asm`.
+
+El programa principal solo trata de encender flags o no segun corresponda.
+El código del timer trata de saltar a la etiqueta correspondiente según el flag que esté activado.
+
+[Link de la demostración](https://www.youtube.com/watch?v=xxLSBaufjYU)
