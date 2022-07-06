@@ -768,27 +768,15 @@ int main(int argc, char* argv[]) {
         int progfile_line[] = {0, 513, 533, 553, 573, 593, 613, 633, 653, 1008, 1016};
         counter = progfile_line[0];
         ensambla(srcfilename, dstfilename);
-        if (argc == 10) {
+        if (argc == 6) {
             //printf("Leyendo programa de interrupciones.\n");
-            
-            for (int i = 1; i < sizeof(progfile_line)/sizeof(progfile_line[0])-5; i++) {
-                counter = progfile_line[i];
-                ensambla(argv[6]/* button4 */, dstfilename);
-            }
-            counter = progfile_line[7];
-            ensambla(argv[3]/* button1 */, dstfilename);
-            counter = progfile_line[6];
-            ensambla(argv[4]/* button2 */, dstfilename);
-            counter = progfile_line[5];
-            ensambla(argv[5]/* button3 */, dstfilename);
-            counter = progfile_line[4];
-            ensambla(argv[6]/* button4 */, dstfilename);
+        
             counter = progfile_line[9];  // error stack
-            ensambla(argv[7]/* error1 */, dstfilename);
+            ensambla(argv[3]/* error1 */, dstfilename);
             counter = progfile_line[10];  // error alu
-            ensambla(argv[8]/* error2 */, dstfilename);
+            ensambla(argv[4]/* error2 */, dstfilename);
             counter = progfile_line[8]; // 653
-            ensambla(argv[9]/* timer */, dstfilename);
+            ensambla(argv[5]/* timer */, dstfilename);
         } else {
             printf("No se han ensamblado interrupciones.\n");
             return 1;

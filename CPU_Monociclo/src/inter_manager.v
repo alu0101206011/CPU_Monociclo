@@ -1,11 +1,11 @@
 `timescale 1 ns / 10 ps
 
 module interrupt_manager #(parameter WIDTH = 8) (input wire clk, reset, 
-                                                 input wire [WIDTH-1:0] int_e, s_calli, s_reti,
+                                                 input wire [WIDTH-1:0] int_e, s_calli, s_reti, 
                                                  output wire s_interr,
-                                                 output wire [WIDTH-1:0] min_bit_s, min_bit_a, int_a, int_s, data_a, data_s,
+                                                 output wire [WIDTH-1:0] min_bit_s, min_bit_a,
                                                  output reg [9:0] addr);
-  wire [WIDTH-1:0] sel_a;
+  wire [WIDTH-1:0] int_s, data_s, int_a, data_a, sel_a; 
 
   register #(WIDTH) Request(clk, reset, 1'b1, data_s, int_s);
   register #(WIDTH) Attention(clk, reset, 1'b1, data_a, int_a);
@@ -29,7 +29,7 @@ module interrupt_manager #(parameter WIDTH = 8) (input wire clk, reset,
       8'bxxxx1000: addr <= 10'b1000101001;
       8'bxxx10000: addr <= 10'b1000111101;
       8'bxx100000: addr <= 10'b1001100101;
-      8'bx1000000: addr <= 10'b1010001101;
+      8'bx1000000: addr <= 10'b1001111001;
       8'b10000000: addr <= 10'b1010001101;
       default: addr <= 10'bx;
     endcase

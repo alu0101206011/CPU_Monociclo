@@ -7,16 +7,10 @@ module dp(input wire clk, reset, s_rel, s_inm, s_stack, s_data, we3, wez, push, 
           input wire [7:0] int_e, s_calli, s_reti,
           output wire z, c, overflow_ALU, overflow_Stack,
           output wire [7:0] opcode, min_bit_a, min_bit_s, int_a,
-          output wire [15:0] addresses,
-          output wire [9:0] program_counter,
-          output wire [9:0] prueba);
+          output wire [15:0] addresses);
   
   wire[31:0] instructions;
   wire[9:0] out_PC, out_incMux, out_pcAdder, out_relMux, out_stackMux, interr_addr;
-  
-  wire [7:0] int_s, data_a, data_s;
-  assign program_counter = out_PC;
-  assign prueba = rd1;
 
   // Incremento
   register #(10) PC(clk, reset, 1'b1, out_stackMux, out_PC);
@@ -62,7 +56,7 @@ module dp(input wire clk, reset, s_rel, s_inm, s_stack, s_data, we3, wez, push, 
   ffd ffoStack(clk, reset, oflow, wez, overflow_Stack);
 
   // Interrupciones
-  interrupt_manager #(8) IM(clk, reset, int_e, s_calli, s_reti, s_interr, min_bit_s, min_bit_a, int_a, int_s, data_a, data_s, interr_addr);
+  interrupt_manager #(8) IM(clk, reset, int_e, s_calli, s_reti, s_interr, min_bit_s, min_bit_a, interr_addr);
 
   //transceiver
   transceiver tr(oe, rd1, data, data_inout);

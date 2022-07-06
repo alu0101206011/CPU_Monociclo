@@ -1,7 +1,7 @@
 `timescale 1 ns / 10 ps
 
 module timer #(parameter M = 8000000, WIDTH = 8) (input  wire clk, reset, 
-                                                output wire[WIDTH-1:0] pulse);
+                                                  output wire[WIDTH-1:0] pulse);
 
 localparam N = $clog2(M);
 reg [N-1:0] count;

@@ -33,7 +33,7 @@ begin
   for (idx = 0; idx < 16; idx = idx + 1) $dumpvars(0,cpu_tb.datalogger.cpumono.data_path.register_file.regb[idx]);  
   for (idx = 0; idx < 16; idx = idx + 1) $dumpvars(0,cpu_tb.datalogger.cpumono.data_path.Stack.stackmem[idx]);
   */
-  $dumpfile("cpu_tb.vcd");
+  $dumpfile("./bin/cpu_tb.vcd");
   $dumpvars;
   buttons = 4'b1111;
   reset = 1;  //a partir del flanco de subida del reset empieza el funcionamiento normal
