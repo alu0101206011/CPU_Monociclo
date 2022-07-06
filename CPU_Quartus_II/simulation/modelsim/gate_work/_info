@@ -1,0 +1,45 @@
+m255
+K3
+13
+cModel Technology
+Z0 dC:\Users\alu01\Desktop\cuatri\DDP\CPU_proyecto\CPU_Quartus_II\simulation\modelsim
+vcpu_environment
+IPVQJ7Z@[i>4@<4NoCa2Fj3
+VC8z`1TEOlk50XRnmR_`203
+Z1 dC:\Users\alu01\Desktop\cuatri\DDP\CPU_proyecto\CPU_Quartus_II\simulation\modelsim
+w1657125889
+8cpu_environment_fast.vo
+Fcpu_environment_fast.vo
+L0 31
+Z2 OV;L;10.1d;51
+r1
+31
+Z3 o-vlog01compat -work work -O0
+!i10b 1
+!s100 S=VPj2Cge>gU5^dBgL0N;3
+!s85 0
+!s108 1657125934.988000
+!s107 cpu_environment_fast.vo|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+.|cpu_environment_fast.vo|
+!s101 -O0
+!s92 -vlog01compat -work work +incdir+. -O0
+vcpu_tb
+!i10b 1
+!s100 IiGP3]oMPAg4V:lzA9_=12
+I@6:znafla3llL;lBV>DS?3
+V0P>[JOo>6KEkgKO=1CbUG0
+R1
+w1657125824
+8C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Quartus_II/../CPU_Monociclo/src/cpu_environment_tb.v
+FC:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Quartus_II/../CPU_Monociclo/src/cpu_environment_tb.v
+L0 3
+R2
+r1
+!s85 0
+31
+!s108 1657125935.249000
+!s107 C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Quartus_II/../CPU_Monociclo/src/cpu_environment_tb.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Quartus_II/../CPU_Monociclo/src|C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Quartus_II/../CPU_Monociclo/src/cpu_environment_tb.v|
+!s101 -O0
+R3
+!s92 -vlog01compat -work work +incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Quartus_II/../CPU_Monociclo/src -O0

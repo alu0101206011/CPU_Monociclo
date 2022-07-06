@@ -1,0 +1,425 @@
+m255
+K3
+13
+cModel Technology
+Z0 dC:\Users\alu01\Desktop\cuatri\DDP\CPU_proyecto\CPU_Quartus_II\simulation\modelsim
+vadder
+IMQj3Z?5z;f]:hVfDAWZai3
+VoT9dR[gaPC0ikHFMjZ8M72
+Z1 dC:\Users\alu01\Desktop\cuatri\DDP\CPU_proyecto\CPU_Quartus_II\simulation\modelsim
+Z2 w1650440410
+Z3 8C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/components.v
+Z4 FC:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/components.v
+L0 32
+Z5 OV;L;10.1d;51
+r1
+31
+Z6 !s108 1656936580.655000
+Z7 !s107 C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/components.v|
+Z8 !s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src|C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/components.v|
+Z9 o-vlog01compat -work work -O0
+Z10 !s92 -vlog01compat -work work +incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src -O0
+!i10b 1
+!s100 55K?9lUA=lJ1I5P66FLi@0
+!s85 0
+!s101 -O0
+valu
+ILmOo]RzOF2Ubf;3hK`hgG2
+V@QU]2fFkoWSQ93L`[VoTM0
+R1
+R2
+8C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/alu.v
+FC:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/alu.v
+L0 3
+R5
+r1
+31
+R9
+R10
+!i10b 1
+!s100 1kAUe>1ajbIggmJHfNE8k2
+!s85 0
+!s108 1656936580.541000
+!s107 C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/alu.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src|C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/alu.v|
+!s101 -O0
+vattention_manager
+IHYekLY2Z859[;=S7D7oEf2
+VoET^]o`TBJ@jSSm892@Z62
+R1
+Z11 w1656710153
+Z12 8C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/inter_manager.v
+Z13 FC:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/inter_manager.v
+L0 9
+R5
+r1
+31
+Z14 !s108 1656936580.193000
+Z15 !s107 C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/inter_manager.v|
+Z16 !s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src|C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/inter_manager.v|
+R9
+R10
+!i10b 1
+!s100 ?d^>RiRcC=^9VT4PMCz_d0
+!s85 0
+!s101 -O0
+vcpu
+I?=h<[`=Rbc24>Qc[`37mK1
+VgBD:zE]K>lT2E<1PQ0JBA3
+R1
+w1656708051
+8C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/cpu.v
+FC:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/cpu.v
+L0 3
+R5
+r1
+31
+R9
+R10
+!i10b 1
+!s100 Z<6;S^>d[^:1[Ml01`K[a1
+!s85 0
+!s108 1656936580.487000
+!s107 C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/cpu.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src|C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/cpu.v|
+!s101 -O0
+vcpu_environment
+IaN?8cQRV@HU3TOLY^_KOI2
+V8aPIhb6b9b5a6[O54=:z:3
+R1
+w1656704021
+8C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/cpu_environment.v
+FC:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/cpu_environment.v
+L0 3
+R5
+r1
+31
+R9
+R10
+!i10b 1
+!s100 3_DT<Q``El1HzbP[X0bd@2
+!s85 0
+!s108 1656936580.432000
+!s107 C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/cpu_environment.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src|C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/cpu_environment.v|
+!s101 -O0
+vcpu_tb
+!i10b 1
+!s100 L@UTDIcKhOMO<NQNck`?a3
+I^P4G3TBUkX:FoXZc0;=BM2
+V0P>[JOo>6KEkgKO=1CbUG0
+R1
+w1656936559
+8C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Quartus_II/../CPU_Monociclo/src/cpu_environment_tb.v
+FC:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Quartus_II/../CPU_Monociclo/src/cpu_environment_tb.v
+L0 3
+R5
+r1
+!s85 0
+31
+!s108 1656936580.792000
+!s107 C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Quartus_II/../CPU_Monociclo/src/cpu_environment_tb.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Quartus_II/../CPU_Monociclo/src|C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Quartus_II/../CPU_Monociclo/src/cpu_environment_tb.v|
+!s101 -O0
+R9
+!s92 -vlog01compat -work work +incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Quartus_II/../CPU_Monociclo/src -O0
+vcu
+IPC2ObgUF4RX806@XU1jO72
+V>D5[YQ0]Bb980N;G;?NiW1
+R1
+w1656711240
+8C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/cu.v
+FC:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/cu.v
+L0 3
+R5
+r1
+31
+R9
+R10
+!i10b 1
+!s100 TgP6DZ@z4Y23BJMjiWA5[1
+!s85 0
+!s108 1656936580.380000
+!s107 C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/cu.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src|C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/cu.v|
+!s101 -O0
+vdp
+I^;0W0;Re63<i9ag6610cP2
+VPF[znVBn=GezdLRH:^dnj0
+R1
+w1656708753
+8C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/dp.v
+FC:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/dp.v
+L0 3
+R5
+r1
+31
+R9
+R10
+!i10b 1
+!s100 emeK?<>lM;nRSdXl`V2HW2
+!s85 0
+!s108 1656936580.326000
+!s107 C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/dp.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src|C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/dp.v|
+!s101 -O0
+vffd
+I`eQf3S77a[9aSe99;=Hhn3
+VjTGai8EcUlS51M<UTA4<53
+R1
+R2
+R3
+R4
+L0 73
+R5
+r1
+31
+R6
+R7
+R8
+R9
+R10
+!i10b 1
+!s100 N71HaH4gzQT^ZEF@Ul1dR1
+!s85 0
+!s101 -O0
+vi_o_manager
+IcPmTficn^=?ELHEc^_LO^0
+V7Ec_a69>72@[K3[jO4:[71
+R1
+w1655757405
+8C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/i_o_manager.v
+FC:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/i_o_manager.v
+L0 3
+R5
+r1
+31
+R9
+R10
+!i10b 1
+!s100 Rz8gPCO6<8TYW]I6;8^ce2
+!s85 0
+!s108 1656936580.270000
+!s107 C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/i_o_manager.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src|C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/i_o_manager.v|
+!s101 -O0
+vinterrupt_manager
+Ifmg@34[k3D<VBO96jPG>:0
+V`TV^WEU4;:4TEoPVPPVMH0
+R1
+R11
+R12
+R13
+L0 15
+R5
+r1
+31
+R14
+R15
+R16
+R9
+R10
+!i10b 1
+!s100 jhh>HhDZ_n7dV^WKkeaXh0
+!s85 0
+!s101 -O0
+vmax_priority_bit
+Ikd<7NN4S>[d7`IRJa=3]^0
+VYIk?A8c>j0h`g78cckj^@1
+R1
+R2
+R3
+R4
+L0 84
+R5
+r1
+31
+R6
+R7
+R8
+R9
+R10
+!i10b 1
+!s100 f_aCjRcHa98YZIE704G2=3
+!s85 0
+!s101 -O0
+vmemprog
+IAIiXEe=EHl@;C:cn];=nN2
+Vd;Q:AZ]5@@]5kaLT=m;oJ1
+R1
+w1650302000
+8C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/memprog.v
+FC:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/memprog.v
+L0 4
+R5
+r1
+31
+R9
+R10
+!i10b 1
+!s100 PSG46][SmK[DO]SQ>jJe30
+!s85 0
+!s108 1656936580.597000
+!s107 C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/memprog.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src|C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/memprog.v|
+!s101 -O0
+vmux2
+IKB3eK_g?BXbBmSE=jK?[>3
+VT8RWJBjAIeM]>7U=5kBkT1
+R1
+R2
+R3
+R4
+L0 51
+R5
+r1
+31
+R6
+R7
+R8
+R9
+R10
+!i10b 1
+!s100 Ca?TBBj>g>9PDeFdAKiE_2
+!s85 0
+!s101 -O0
+vmux4
+I3flNzg;2DccJ;C0nYL_Zb2
+V@m74j;^3XFJ7>OzQXh6V`0
+R1
+R2
+R3
+R4
+L0 61
+R5
+r1
+31
+R6
+R7
+R8
+R9
+R10
+!i10b 1
+!s100 ^DjX33jEBS@3gOc]k9l=>3
+!s85 0
+!s101 -O0
+vregfile
+IL`mVali=d]jN0k^WA^aoG2
+V_5=mheG77bU2HLSbWg::f2
+R1
+R2
+R3
+R4
+L0 5
+R5
+r1
+31
+R6
+R7
+R8
+R9
+R10
+!i10b 1
+!s100 Lhdk5z7_b@YV3`k4WA]lg3
+!s85 0
+!s101 -O0
+vregister
+ISUji;hCValT:>:kLcRiSU2
+VOBbj@h1aFSPlIKzAhD<7A0
+R1
+R2
+R3
+R4
+L0 39
+R5
+r1
+31
+R6
+R7
+R8
+R9
+R10
+!i10b 1
+!s100 14kXDfE?Db?cU61mz3NSS2
+!s85 0
+!s101 -O0
+vrequest_manager
+IcULL_d4=A=@X5UCg9ZG>L1
+VoPVF?K5TdJIgSJ5X[FU`E0
+R1
+R11
+R12
+R13
+L0 3
+R5
+r1
+31
+R14
+R15
+R16
+R9
+R10
+!i10b 1
+!s100 0[LVVGRUn26]mKeP?JUGa2
+!s85 0
+!s101 -O0
+vstack
+IMKWPINf@h2R_Y_Mdl`WKk3
+VLmm?[FTAFEN^jeUG`N`OZ2
+R1
+w1656615434
+8C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/stack.v
+FC:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/stack.v
+L0 3
+R5
+r1
+31
+R9
+R10
+!i10b 1
+!s100 gzG=LnQD]8n5>Zf9mO<Mg3
+!s85 0
+!s108 1656936580.135000
+!s107 C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/stack.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src|C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/stack.v|
+!s101 -O0
+vtimer
+I5hd73L8cVZ5QYa?`V6NF41
+V904RbD<VQJZ=RVI]9ERY?2
+R1
+w1656710011
+8C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/timer.v
+FC:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/timer.v
+L0 3
+R5
+r1
+31
+R9
+R10
+!i10b 1
+!s100 _ZYH<E:f[TAaV2n=dBS<Q0
+!s85 0
+!s108 1656936580.032000
+!s107 C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/timer.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src|C:/Users/alu01/Desktop/cuatri/DDP/CPU_proyecto/CPU_Monociclo/src/timer.v|
+!s101 -O0
+vtransceiver
+I625`R2KKhMY2L9<k`6jbK2
+VG:72K[W;YaazdRf3_iER`2
+R1
+R2
+R3
+R4
+L0 93
+R5
+r1
+31
+R6
+R7
+R8
+R9
+R10
+!i10b 1
+!s100 Y1gRQmXbmVMP@OFHK`4dK1
+!s85 0
+!s101 -O0

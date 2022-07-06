@@ -1,0 +1,18 @@
+transcript on
+if {[file exists rtl_work]} {
+	vdel -lib rtl_work -all
+}
+vlib rtl_work
+vmap work rtl_work
+
+vlog -vlog01compat -work work +incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_Monociclo/src {C:/Users/alu01/Desktop/cuatri/DDP/CPU_Monociclo/src/stack.v}
+vlog -vlog01compat -work work +incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_Monociclo/src {C:/Users/alu01/Desktop/cuatri/DDP/CPU_Monociclo/src/inter_manager.v}
+vlog -vlog01compat -work work +incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_Monociclo/src {C:/Users/alu01/Desktop/cuatri/DDP/CPU_Monociclo/src/i_o_manager.v}
+vlog -vlog01compat -work work +incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_Monociclo/src {C:/Users/alu01/Desktop/cuatri/DDP/CPU_Monociclo/src/dp.v}
+vlog -vlog01compat -work work +incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_Monociclo/src {C:/Users/alu01/Desktop/cuatri/DDP/CPU_Monociclo/src/cu.v}
+vlog -vlog01compat -work work +incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_Monociclo/src {C:/Users/alu01/Desktop/cuatri/DDP/CPU_Monociclo/src/cpu_environment.v}
+vlog -vlog01compat -work work +incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_Monociclo/src {C:/Users/alu01/Desktop/cuatri/DDP/CPU_Monociclo/src/cpu.v}
+vlog -vlog01compat -work work +incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_Monociclo/src {C:/Users/alu01/Desktop/cuatri/DDP/CPU_Monociclo/src/alu.v}
+vlog -vlog01compat -work work +incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_Monociclo/src {C:/Users/alu01/Desktop/cuatri/DDP/CPU_Monociclo/src/memprog.v}
+vlog -vlog01compat -work work +incdir+C:/Users/alu01/Desktop/cuatri/DDP/CPU_Monociclo/src {C:/Users/alu01/Desktop/cuatri/DDP/CPU_Monociclo/src/components.v}
+
