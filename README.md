@@ -8,31 +8,30 @@ El objetivo de esta práctica es desarrollar una CPU básica monociclo. Esta CPU
 - Una pila para subrutinas con control de overflow y underflow.
 - Operaciones aritmetico-lógicas con registros.
 - Operaciones aritmetico-lógicas inmediatas
-- Salto absoluto, salto relativom salto si cero, salto si no cero y si negativo.
+- Salto absoluto, salto relativo salto si cero, salto si no cero y si negativo.
 - Control de overflow para operaciones aritmetico-lógicas.
 - Modo de direcionamiento directo y relativo.
 - Gestión jerarquica de interrupciones.
-- Gestión de entrada-salida por el bus de direcciones y datos.
+- Gestión de entrada-salida con bus de direcciones y datos.
+
+## Ensamblador
+Como añadido se dispone de un ensamblador dado en clase en el que he implementado varias mejoras para poder usar todas las funciones de la CPU.
+
+- Mnemonicos complejos (ble, bge, btl, bgt, bne, beq).
+- Posibilidad de tener etiquetas que sean sufijo o prefijo de otra.
+- Posibilidad de tener salto relativo.
+- Posibilidad de tener varios ficheros de códigos para una misma memoria de programa, seleccionando simplemente su posición dentro de ella.
 
 
-## Manejo básico
-Estando desde el espacio de trabajo ejecutamos
-```
-./ejecutar.sh
-```
+## cpu_exe.sh
+Es un código realizado en bash para agilizar las pruebas sobre la CPU. El código se encarga de compilar el ensamblador, ejecutarlo con los ficheros que quiero pasar a binario en el progfile.mem, compilar el código verilog, ejecutarlo usando el test bench y finalmente tengo varias opciones, para por ejemplo, utilizar el GTKWave, pasar automaticamente los ficheros que necesito para hacer funcionar el código en Quartus II, etc.
 
-Gracias a esto compilaremos el código ensamblador en c++, lo ejecutaremos con
-un archivo pasado como parametro al main por defecto, se compilará verilog y 
-se ejecutará una simulación.
 
-Si quiere saber todas las opciones ejecute en terminal:
-```
-./ejecutar.sh -h  
+![Salida por línea de comandos del help del cpu_exe.png](./img/salida_comandos_help_cpu_exe.png)
 
-    ó
 
-./ejecutar.sh --help
-```
+![Salida por línea de comandos del help del cpu_exe.png](./img/ejemplo_uso_cpu_exe.png)
+
 
 ## Diseño del camino de datos de la CPU
 
@@ -112,12 +111,13 @@ Para la realización de esta CPU se han necesitado varios componentes:
 - Max_priority_bit: Modulo que me indica el bit menos significativo de un número binario, para poder elegir la prioridad en las interrupciones.
 - Transceiver: Para manejar el bus inout de datos que va hacia afuera de la CPU.
 
-creo que faltan cosas
 
 ## Pila
 ![Pila](./img/pila.png)
 
-La pila es sincrona y solo cambia de estado cuando hay un reset, un push o un pop en el proximo flanco de reloj.
+La pila es síncrona y como se ve en la imagen, "malgasto" la primera posición de la pila para tener un estado empty. Necesario para poder controlar cuando la pila está vacía y cuando habrá un underflow. También se posee control sobre el overflow.
+
+Este control se realiza añadiendo un bit más al sp.
 
 
 ## Unidad aritmetico-lógica
@@ -141,38 +141,66 @@ Hay un carry_intr porque no se debe permitir perder el valor de carry si se salt
 El zero se usa para el salto si cero o salto si no cero.
 El zero_intr tiene la misma explicación que carry_intr.
 
+Luego teniendo en cuenta los inmediatos, a la hora de hacer restas me aseguro de que este siempre reste al registro, que por diseño, siempre será la primera posición. Por lo que se tiene un flag s_inm que también sirve para invertir las posiciones en las restas.
+
 
 ## Unidad de control
-![Unidad de control](./img/unidad_de_control.png)
+![Unidad de control](./img/CPU_monociclo_Unidad_de_control.png)
 
-Dentro de la unidad de control, para un uso más sencillo de las señales se han usado una serie de parametros que se asignan según el caso en el que se encuentre,
-a un reg de control es asignado a una concatenación de casi todas las señales de salida de la UC. El op_alu es una excepción por su facilidad al asignarle parte del 
-opcode.
+Un bloque always que no sea `*` normalmente no es lo que queremos ya que la máquina se dedicará a guardar el reg, creando un registro virtual. Como mi objetivo es tener una unidad de control completamente combinacional es necesario tener esta `*` en la lista de sensibilidad del always.
 
+Para disminuir el número de comparaciones que tiene que hacer cada variable dentro de cada bloque always he separado el módulo de la unidad de control en otros dos modulos: Uno dedicado a tratar las interrupciones y errores y otro para el uso normal de la máquina (usando el opcode).
 
-## Entrada Salida
+Como la única señal que coincide entre los dos bloques always es `control`, como se puede ver en el diagrama de arriba, he realizado dos salidas distintas para luego unirlas con una puerta lógica or. Esto funciona porque cuando la salida de control es diferente de cero en uno de los dos módulos, en el otro si lo estará gracias a las señales de control de errores y de interrupciones. 
+
+Para un uso más sencillo de las señales, se han usado una serie de parámetros que se asignan, según el caso en el que se encuentre,
+al reg de control nombrado anteriormente.
+
+Se ha de resaltar que en el diagrama se encuentra una señal interrupt que en el código es en realidad: 
+```verilog
+((min_bit_s != 0 && min_bit_a == 0) || min_bit_s < min_bit_a)
+```
+
+Pero se ha puesto como una señal para facilitar la lectura del diseño.
 
 
 ## Interrupciones
-La CPU cuenta con un sistema de interrupcciones jerarquico. Posee de un total de 8 interrupciones.
+![Interrupciones jerárquicas](./img/CPU_monociclo_Interrupciones_jerarquicas.png)
 
-Para realizar esto se han utilizado 2 vectores, uno de selección y otro de atención
+La CPU cuenta con un sistema de interrupcciones jerárquico. Posee de un total de 8 interrupciones.
 
- diferentes donde la interrupción de mayor prioridad será el bit
-menos significativo de un vector de prioridades.
+Para realizar esto se han utilizado 2 registros, uno de selección y otro de atención donde la interrupción de mayor prioridad será el del bit
+menos significativo, por lo que, si llega a selección una interrupción con mayor prioridad a la que se encuentra en atención, se parará el opcode de la instrucción actual
+para saltar a la subrutina dedicada a esa interrupción concreta y haciendo otro push a la pila, luego podrá volver a la interrupción anterior siguiendo la prioridad, haciendo uso de reti (un pop en la pila). 
 
+Se tienen como máximo 8 interrupciones que se pueden interrumpir entre ellas si se diera el caso. Como el tamaño de la pila es mayor, en principio no debería haber ningún problema. De todos modos hay que andar con ojo si disponemos de muchas subrutinas encadenadas además de estas interrupciones.
+
+Las 2 interrupciones más prioritarias se utilizan para errores como overflow o underflow de la pila y para lo mismo en la ALU.
+Y la menos prioritaria es utilizada para las interrupciones del timer.
 
 
 ## Biestables
 
 ### Biestables en las interrupciones
-Es necesario tener biestables propios de interrupciones porque es preciso mantener el valor de los biestables del programa de ejecución normal de la CPU por si hay una interrupción
-justo cuando vamos a decidir un salto.
+Es necesario tener biestables propios para las interrupciones porque es preciso mantener el estado de los biestables del programa principal justo en el momento en el que se para el opcode para atender una interrución cuando se iba a decirdir un salto. Cuando vuelva de la interrupción, la operación anterior dada para decidir el salto es como si nunca se hubiera producido.
 
-Además no sería bueno limitar los saltos en las interrupciones en si. Por esta razón nacieron
-los biestables de salto en las interrupciones.
+Además no sería bueno limitar los saltos en las interrupciones en si, con el fin de mantener el valor cuando volvamos. Por lo que decidí duplicar los biestables
+para guardar los del programa principal y poder seguir teniendo saltos en medio de interrupciones.
 
 
+## Entrada Salida (Ecosistema de la CPU)
+
+
+![Ecosistema de la CPU](./img/CPU_monociclo_E_S.png)
+
+
+Se dispone de una memoria SRAM a la que tenemos acceso a la mitad de los datos (256KBytes), ya que tenemos fijados los bits de selección del upper y lower de la memoria a lower.
+
+También se tiene acceso a los 10 leds Rojos, 8 leds Verdes, 10 switches y 4 botones.
+
+Para poder comunicarnos entre todos estos elementos he realizado un mapeo de la memoria, donde ciertas direcciones de memoria son los leds, switches y botones; lo demás para direccionar en la memoria SRAM.
+
+Para hacer loads y stores se ha usado un transceiver en la cpu, que nos permite tener un bus de datos bidireccional, para poder comunicarnos con la memoria cuando su oe esté activado y controlar los leds y demás e/s con el oe propio del transceiver, que se encuentra en io_manager.
 
 
 # Quartus II
@@ -181,42 +209,13 @@ los biestables de salto en las interrupciones.
 ## Problemas
 
 ### Slacks negativos
-Hay instrucciones que producen slacks negativos
-
-El codigo ensamblador utilizado para que funcione el parpadeo:
-
-Programa principal
-```ensamblador
-start:
-c2 R5 R0
-j start
-```
-
-timer
-```ensamblador
-# encender y apagar led verde
-load R14 0xFFFF
-li R15 0xFF
-bne R14 R15 encender_leds_verdes
-
-# apaga
-store R0 0xFFFF
-reti
-
-encender_leds_verdes:
-store R15 0xFFFF
-reti
-```
-
-Con esta versión se descontrolan los 7 segmentos y no sé la razón.
-
-En esta versión se pone 8808.
-
-Ahora asigné pines de switches y hay slacks negativo
+Hay instrucciones que producen slacks negativos y hasta incluso asignar más pines le afecta.
 
 
 ### Solución para los slacks negativos
-Bajar la frecuencia de reloj a 27MHz, siendo el periodo de 37ns
+La solución ha sido bajar la frecuencia de reloj a 24MHz, siendo el periodo de 41ns.
+
+Con 27MHz todavía seguían dando slacks negativos.
 
 
 ### Program Counter no va bien
@@ -245,3 +244,7 @@ En este ejemplo se encienden correctamente los leds y se apagan pero luego no se
 Y eso que salta bien, por lo que debe de haber algún tipo de problema en el store porque al saltar bien significa que el
 load lo hace correctamente.
 
+
+### Solución
+Hacer que en el bloque always se pueda poner una `*` en la lista de sensibilidad. Además también es necesario que los if siempre tengan un else
+correspondiente que tenga lo que deben valer.
