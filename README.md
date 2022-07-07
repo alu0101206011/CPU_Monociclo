@@ -265,4 +265,4 @@ El programa principal se encuentra en `software.asm` y las interrupciones del ti
 El programa principal solo trata de encender flags o no segun corresponda.
 El código del timer trata de saltar a la etiqueta correspondiente según el flag que esté activado.
 
-[Link de la demostración](https://www.youtube.com/watch?v=xxLSBaufjYU)
+[Link de la demostración](https://youtu.be/qvEXRC6JKvs)
